@@ -31,12 +31,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    //Gönderilecek yazıları gönderdim.
                     ShowImage(
                         firstText = stringResource(R.string.jetpack_compose_tutorial),
                         secondText = stringResource(R.string.jetpack_compose_modern),
                         thirdText = stringResource(R.string.in_this_tutorial),
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxSize() //Tüm sayfayı kaplaması için maxsize yaptım
                     )
                 }
             }
@@ -44,19 +45,20 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//Gerekli strignleri ve modifier'ı aldım
 @Composable
 fun ShowImage(
     firstText: String, secondText: String, thirdText: String, modifier: Modifier = Modifier
-) {
+) { //Resmi drawable'dan aldım
     val image = painterResource(R.drawable.bg_compose_background)
     Column(
         modifier = modifier
     ) {
-        Image(
+        Image( // resmi ekledim
             painter = image,
             contentDescription = null
         )
-        Text(
+        Text( //text'te boyut, padding ve ortalama ekledim
             text = firstText,
             fontSize = 24.sp,
             modifier = Modifier
@@ -77,6 +79,7 @@ fun ShowImage(
     }
 }
 
+//Preview kısmı sadece tasarımı gerçek zamanlı görmek için var.
 @Preview(showBackground = true)
 @Composable
 fun ShowImagePreview() {
