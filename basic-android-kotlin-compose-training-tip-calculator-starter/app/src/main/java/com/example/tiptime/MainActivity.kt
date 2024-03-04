@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2023 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.example.tiptime
 
 import android.os.Bundle
@@ -23,14 +8,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -38,6 +27,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.NumberFormat
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.KeyboardType
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,11 +64,17 @@ fun TipTimeLayout() {
                 .padding(bottom = 16.dp, top = 40.dp)
                 .align(alignment = Alignment.Start)
         )
+        EditNumberField( //Text'in altına ekledik
+            modifier = Modifier
+                .padding(bottom = 32.dp) //alt kısmına boşluk ekledik
+                .fillMaxWidth() //yatayda tüm genişlik sağlayacak
+        )
         Text(
             text = stringResource(R.string.tip_amount, "$0.00"),
             style = MaterialTheme.typography.displaySmall
         )
         Spacer(modifier = Modifier.height(150.dp))
+
     }
 }
 
@@ -87,6 +86,27 @@ fun TipTimeLayout() {
 private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
     val tip = tipPercent / 100 * amount
     return NumberFormat.getCurrencyInstance().format(tip)
+}
+
+@Composable
+fun EditNumberField(modifier: Modifier = Modifier) {
+    var amountInput by remember {mutableStateOf("")}  //başlangıç değeri olşturduk
+    //yukarıda bir başlangıç değerli değişken duruma sahibi değişken tanımladık
+    //aşağıda ise textfield'daki değişken değerden gelen value'yi ona eşitledik
+    TextField(
+        value = amountInput, //bu textfield'daki bulunan değer için
+        //tutar değerini textfield'daki değişen değere eşitliyoruz.
+        //it ifadesinin kullanılma nedeni kendisine yani yeni değere eşitledik demek
+        //buda textfield'da değer değiştiğinde çalışıyor
+        onValueChange = {amountInput = it },
+        //Text'in içine label ekledik ve giriş yapacağı şeyin iblgisini veriyoruz
+        label = { Text(stringResource(R.string.bill_amount)) },
+        //Tek bir satırda yazılmasını istiyoruz aşağı satıra geçmesin
+        singleLine = true,
+        //Klavye tipini belirteceğiz. sadece numara girsin diye böyle belirttik
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = modifier
+    )
 }
 
 @Preview(showBackground = true)
