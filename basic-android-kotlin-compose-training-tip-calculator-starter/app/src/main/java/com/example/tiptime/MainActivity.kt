@@ -64,7 +64,8 @@ fun TipTimeLayout() {
                 .padding(bottom = 16.dp, top = 40.dp)
                 .align(alignment = Alignment.Start)
         )
-        EditNumberField( //Text'in altına ekledik
+        //Text'in altına ekledik
+        EditNumberField(
             modifier = Modifier
                 .padding(bottom = 32.dp) //alt kısmına boşluk ekledik
                 .fillMaxWidth() //yatayda tüm genişlik sağlayacak
@@ -90,8 +91,14 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
 
 @Composable
 fun EditNumberField(modifier: Modifier = Modifier) {
-    var amountInput by remember {mutableStateOf("")}  //başlangıç değeri olşturduk
-    //yukarıda bir başlangıç değerli değişken duruma sahibi değişken tanımladık
+    //başlangıç değeri olşturduk
+    //aşağıda bir başlangıç değerli değişken duruma sahibi değişken tanımladık
+    var amountInput by remember {mutableStateOf("")}
+
+    //klavyeden girilen değeri aldık ve double'a çevirdik
+    val amount = amountInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount)
+
     //aşağıda ise textfield'daki değişken değerden gelen value'yi ona eşitledik
     TextField(
         value = amountInput, //bu textfield'daki bulunan değer için
