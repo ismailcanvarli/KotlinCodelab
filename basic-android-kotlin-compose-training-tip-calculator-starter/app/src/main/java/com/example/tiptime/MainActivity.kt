@@ -19,18 +19,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.NumberFormat
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.input.KeyboardType
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,13 +50,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TipTimeLayout() {
-/*
-başlangıç değeri olşturduk
-aşağıda bir başlangıç değerli değişken duruma sahibi değişken tanımladık
-Bu değeri burada tanımlamamızın sebebi buna başka composable'dan da erişmek
-için kullandık.
- */
-    var amountInput by remember {mutableStateOf("")}
+    /*
+    başlangıç değeri olşturduk
+    aşağıda bir başlangıç değerli değişken duruma sahibi değişken tanımladık
+    Bu değeri burada tanımlamamızın sebebi buna başka composable'dan da erişmek
+    için kullandık.
+     */
+    var amountInput by remember { mutableStateOf("") }
 
     //klavyeden girilen değeri aldık ve double'a çevirdik
     val amount = amountInput.toDoubleOrNull() ?: 0.0
@@ -79,7 +79,7 @@ için kullandık.
         //Text'in altına ekledik
         EditNumberField(
             value = amountInput,
-            onValueChange = {amountInput = it},
+            onValueChange = { amountInput = it },
             modifier = Modifier
                 .padding(bottom = 32.dp) //alt kısmına boşluk ekledik
                 .fillMaxWidth() //yatayda tüm genişlik sağlayacak
@@ -112,7 +112,7 @@ fun EditNumberField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
-    ) {
+) {
 
     //aşağıda ise textfield'daki değişken değerden gelen value'yi ona eşitledik
     TextField(
