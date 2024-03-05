@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -57,10 +58,15 @@ fun TipTimeLayout() {
     için kullandık.
      */
     var amountInput by remember { mutableStateOf("") }
+    //Bağış yüzdesini belirlemek için eklediğimiz değişken
+    var tipInput by remember { mutableStateOf("") }
 
+    val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
     //klavyeden girilen değeri aldık ve double'a çevirdik
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount)
+    //yapılan bağışı hesaplayan fonksiyon
+
+    val tip = calculateTip(amount, tipPercent)
 
     Column(
         modifier = Modifier
@@ -78,11 +84,21 @@ fun TipTimeLayout() {
         )
         //Text'in altına ekledik
         EditNumberField(
+            label = R.string.bill_amount,
             value = amountInput,
             onValueChange = { amountInput = it },
             modifier = Modifier
                 .padding(bottom = 32.dp) //alt kısmına boşluk ekledik
                 .fillMaxWidth() //yatayda tüm genişlik sağlayacak
+        )
+        //Yeni bir giriş girdi text'i ekledik. Yüzdeyi belirlemek için
+        EditNumberField(
+            label = R.string.how_was_the_service,
+            value = tipInput,
+            onValueChange = { tipInput = it },
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth()
         )
         Text(
             text = stringResource(R.string.tip_amount, tip),
@@ -109,6 +125,12 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
  */
 @Composable
 fun EditNumberField(
+    /*
+    label değişkeni ekleyeceğiz. Müşteri yapacağı bağış oranını kendi belirleyecek
+    @StringRes kullanmamızın sebebi du değeri kullanıcı text'e girecek
+     bizde oradan alacağımız için oldu. type-safe oluyor bu şekilde.
+     */
+    @StringRes label: Int,
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -121,8 +143,8 @@ fun EditNumberField(
         //it ifadesinin kullanılma nedeni kendisine yani yeni değere eşitledik demek
         //buda textfield'da değer değiştiğinde çalışıyor
         onValueChange = onValueChange,
-        //Text'in içine label ekledik ve giriş yapacağı şeyin iblgisini veriyoruz
-        label = { Text(stringResource(R.string.bill_amount)) },
+        //Text'in içine label ekledik. Kullanıcı kendi belirleyecek yapacağı bağışı
+        label = { Text(stringResource(label)) },
         //Tek bir satırda yazılmasını istiyoruz aşağı satıra geçmesin
         singleLine = true,
         //Klavye tipini belirteceğiz. sadece numara girsin diye böyle belirttik
