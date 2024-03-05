@@ -1,19 +1,23 @@
 package com.example.tiptime
 
 import android.os.Bundle
+import androidx.compose.material3.Switch
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -61,13 +65,20 @@ fun TipTimeLayout() {
     var amountInput by remember { mutableStateOf("") }
     //Bağış yüzdesini belirlemek için eklediğimiz değişken
     var tipInput by remember { mutableStateOf("") }
+    //switch için ekledik bu değeri ve başlangıç değeri false olarak atadık
+    var roundUp by remember { mutableStateOf(false) }
 
     val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
     //klavyeden girilen değeri aldık ve double'a çevirdik
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    //yapılan bağışı hesaplayan fonksiyon
 
-    val tip = calculateTip(amount, tipPercent)
+    /*
+    yapılan bağışı hesaplayan fonksiyon.
+    Amount yazdığımız değer değişkeni
+    tipPercent istenilen yüzde
+    roundUp ise yukarı yuvarlama için kullanılan switch için
+     */
+    val tip = calculateTip(amount, tipPercent, roundUp)
 
     Column(
         modifier = Modifier
@@ -115,6 +126,12 @@ fun TipTimeLayout() {
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
         )
+        //switch ve onun yazısı için eklediğimiz kısım.
+        RoundTheTipRow(
+            roundUp = roundUp,
+            onRoundUpChanged = { roundUp = it },
+            modifier = Modifier.padding(bottom = 32.dp)
+        )
         Text(
             text = stringResource(R.string.tip_amount, tip),
             style = MaterialTheme.typography.displaySmall
@@ -129,8 +146,15 @@ fun TipTimeLayout() {
  * according to the local currency.
  * Example would be "$10.00".
  */
-private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
-    val tip = tipPercent / 100 * amount
+private fun calculateTip(
+    amount: Double,
+    tipPercent: Double = 15.0,
+    roundUp: Boolean
+): String {
+    var tip = tipPercent / 100 * amount
+    if (roundUp) {
+        tip = kotlin.math.ceil(tip)
+    }
     return NumberFormat.getCurrencyInstance().format(tip)
 }
 
@@ -169,6 +193,33 @@ fun EditNumberField(
         keyboardOptions = keyboardOptions,
         modifier = modifier
     )
+}
+
+//switch button ekleyeceğiz. Hesabın aşağı yukarı yuvarlanması ile ilgili
+@Composable
+fun RoundTheTipRow(
+    roundUp: Boolean,
+    onRoundUpChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .size(48.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        //hesabı yuvarlayalım mı yazısı için text ekledik
+        Text(text = stringResource(R.string.round_up_tip))
+        //Switch'i satırın sonuna ekledik.
+        Switch(
+            checked = roundUp,
+            onCheckedChange = onRoundUpChanged,
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.End)
+        )
+    }
+
 }
 
 @Preview(showBackground = true)
