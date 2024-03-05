@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -85,6 +86,15 @@ fun TipTimeLayout() {
         //Text'in altına ekledik
         EditNumberField(
             label = R.string.bill_amount,
+            /*
+            Klavye tipini değişken olarak verdik. Çünkü iki farlı
+            editNumberField değişkeni var. İlkinde ente tuşu ileri gitmek için
+            kullanılıyor ikincisinde ise bitirmek için kullanıcaz.
+             */
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
             value = amountInput,
             onValueChange = { amountInput = it },
             modifier = Modifier
@@ -94,6 +104,11 @@ fun TipTimeLayout() {
         //Yeni bir giriş girdi text'i ekledik. Yüzdeyi belirlemek için
         EditNumberField(
             label = R.string.how_was_the_service,
+            //Burada klavye'de ki enter tuşu işlemi bitirmek için kullanılır.
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
             value = tipInput,
             onValueChange = { tipInput = it },
             modifier = Modifier
@@ -131,6 +146,7 @@ fun EditNumberField(
      bizde oradan alacağımız için oldu. type-safe oluyor bu şekilde.
      */
     @StringRes label: Int,
+    keyboardOptions: KeyboardOptions,
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -147,8 +163,10 @@ fun EditNumberField(
         label = { Text(stringResource(label)) },
         //Tek bir satırda yazılmasını istiyoruz aşağı satıra geçmesin
         singleLine = true,
-        //Klavye tipini belirteceğiz. sadece numara girsin diye böyle belirttik
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        /*Klavye tipini belirteceğiz. sadece numara girsin diye böyle belirttik
+        Enter tuşuna basıldığında sonraki text'e geçme işlemini ekliyoruz
+         */
+        keyboardOptions = keyboardOptions,
         modifier = modifier
     )
 }
