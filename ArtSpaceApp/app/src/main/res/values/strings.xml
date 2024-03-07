@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Art Space App</string>
+    <string name="artwork_title">Artwork Title</string>
+    <string name="artwork_artist">Artwork Artist (%1$s)</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
 </resources>
