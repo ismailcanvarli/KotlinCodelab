@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ArtGallery(modifier: Modifier = Modifier) {
-    var currentStep by remember { mutableStateOf(1) }
+    var currentStep: Int by remember { mutableStateOf(1) }
 
 
     Column(
@@ -90,7 +90,17 @@ fun ArtGallery(modifier: Modifier = Modifier) {
         }
 
         Spacer(modifier = Modifier.height(25.dp))
-        ComposableDisplayController(modifier)
+
+        Row {
+            Button(
+                onClick = { currentStep = 1 }) {
+                Text(text = stringResource(R.string.previous))
+            }
+            Spacer(modifier.width(50.dp))
+            Button(onClick = { currentStep = 2 }) {
+                Text(text = stringResource(R.string.next))
+            }
+        }
     }
 }
 
@@ -109,28 +119,16 @@ fun ComposableArtworkWall(
 
 @Composable
 fun ComposableArtworkDescriptor(
-    year: Int, nameOfTheTable: String, painterName: String, modifier: Modifier
+    year: Int,
+    nameOfTheTable: String,
+    painterName: String,
+    modifier: Modifier
 ) {
     Text(
         text = nameOfTheTable, fontSize = 28.sp
     )
     Spacer(modifier.height(15.dp))
     Text(text = "$painterName $year")
-}
-
-@Composable
-fun ComposableDisplayController(modifier: Modifier = Modifier) {
-    Row {
-        Button(
-            onClick = { /*TODO*/ },
-        ) {
-            Text(text = stringResource(R.string.previous))
-        }
-        Spacer(modifier.width(50.dp))
-        Button(onClick = { /*TODO*/ }) {
-            Text(text = stringResource(R.string.next))
-        }
-    }
 }
 
 @Preview(showBackground = true)
