@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Art Space App</string>
-    <string name="artwork_title">Artwork Title</string>
-    <string name="artwork_artist">Artwork Artist (%1$s)</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
+    <string name="vincent_van_gogh">Vincent van Gogh</string>
+    <string name="the_starry_night">The Starry Night</string>
+    <string name="mona_lisa">Mona Lisa</string>
+    <string name="leonardo_da_vinci">Leonardo da Vinci</string>
 </resources>

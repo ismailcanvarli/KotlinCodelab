@@ -1,6 +1,5 @@
 package com.example.artspaceapp
 
-import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,6 +18,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -46,28 +49,57 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ArtGallery(modifier: Modifier = Modifier) {
+    var currentStep by remember { mutableStateOf(1) }
+
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
             .padding(
-                horizontal = 10.dp,
-                vertical = 50.dp
+                horizontal = 10.dp, vertical = 50.dp
             )
     ) {
-        ComposableArtworkWall(modifier)
-        Spacer(modifier = Modifier.height(50.dp))
-        ComposableArtworkDescriptor(year = 1515, modifier)
+        when (currentStep) {
+            1 -> {
+                ComposableArtworkWall(
+                    drawableResourceId = R.drawable.starry_night, modifier
+                )
+                Spacer(modifier = Modifier.height(50.dp))
+                ComposableArtworkDescriptor(
+                    year = 1889,
+                    nameOfTheTable = stringResource(R.string.the_starry_night),
+                    painterName = stringResource(R.string.vincent_van_gogh),
+                    modifier
+                )
+            }
+
+            2 -> {
+                ComposableArtworkWall(
+                    drawableResourceId = R.drawable.mona_lisa, modifier
+                )
+                Spacer(modifier = Modifier.height(50.dp))
+                ComposableArtworkDescriptor(
+                    year = 1519,
+                    nameOfTheTable = stringResource(R.string.mona_lisa),
+                    painterName = stringResource(R.string.leonardo_da_vinci),
+                    modifier
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(25.dp))
         ComposableDisplayController(modifier)
     }
 }
 
 @Composable
-fun ComposableArtworkWall(modifier: Modifier) {
+fun ComposableArtworkWall(
+    drawableResourceId: Int, modifier: Modifier
+) {
     Image(
-        painter = painterResource(R.drawable.starry_night),
+        painter = painterResource(drawableResourceId),
         contentDescription = null,
         modifier
             .fillMaxWidth()
@@ -76,13 +108,14 @@ fun ComposableArtworkWall(modifier: Modifier) {
 }
 
 @Composable
-fun ComposableArtworkDescriptor(year: Int, modifier: Modifier) {
+fun ComposableArtworkDescriptor(
+    year: Int, nameOfTheTable: String, painterName: String, modifier: Modifier
+) {
     Text(
-        text = stringResource(R.string.artwork_title),
-        fontSize = 28.sp
+        text = nameOfTheTable, fontSize = 28.sp
     )
     Spacer(modifier.height(15.dp))
-    Text(text = stringResource(R.string.artwork_artist, year))
+    Text(text = "$painterName $year")
 }
 
 @Composable
@@ -93,7 +126,7 @@ fun ComposableDisplayController(modifier: Modifier = Modifier) {
         ) {
             Text(text = stringResource(R.string.previous))
         }
-        Spacer(modifier.width(150.dp))
+        Spacer(modifier.width(50.dp))
         Button(onClick = { /*TODO*/ }) {
             Text(text = stringResource(R.string.next))
         }
