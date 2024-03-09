@@ -19,7 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 fun ArtGallery(modifier: Modifier = Modifier) {
     //Var tipinde başlangıç duruma sahip olan ve durumu dinamik olarak değişen
     //bir değişken tanımladım ve bu değişken ile hangi resmin koyulacağını belirledim.
-    var currentStep: Int by remember { mutableStateOf(1) }
+    var currentStep: Int by remember { mutableIntStateOf(1) }
 
     Column(
         verticalArrangement = Arrangement.Top,
