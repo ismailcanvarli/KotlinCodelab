@@ -49,8 +49,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ArtGallery(modifier: Modifier = Modifier) {
+    //Var tipinde başlangıç duruma sahip olan ve durumu dinamik olarak değişen
+    //bir değişken tanımladım ve bu değişken ile hangi resmin koyulacağını belirledim.
     var currentStep: Int by remember { mutableStateOf(1) }
-
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -91,6 +92,8 @@ fun ArtGallery(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(25.dp))
 
+        //buton değişkeni ile bu mutableState'e sahip olan değişken aynı yerde olması gerekiyor.
+        //Önceki örneklerde de aynı şekil yaptım.
         Row {
             Button(
                 onClick = { currentStep = 1 }) {
@@ -104,19 +107,18 @@ fun ArtGallery(modifier: Modifier = Modifier) {
     }
 }
 
+// Gösterilecek resmi burada seçtim.
 @Composable
-fun ComposableArtworkWall(
-    drawableResourceId: Int, modifier: Modifier
-) {
+fun ComposableArtworkWall(drawableResourceId: Int, modifier: Modifier) {
     Image(
         painter = painterResource(drawableResourceId),
         contentDescription = null,
-        modifier
-            .fillMaxWidth()
-            .height(300.dp)
+        modifier.fillMaxWidth().height(300.dp)
     )
 }
 
+//Resim ile alakalı açıklamaları burada yazdım.
+//Resmin adı, yapan kişi ve yapıldığı tarih bilgileri.
 @Composable
 fun ComposableArtworkDescriptor(
     year: Int,
