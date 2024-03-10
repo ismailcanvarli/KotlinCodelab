@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -109,11 +110,15 @@ fun ArtGallery(modifier: Modifier = Modifier) {
 
 // Gösterilecek resmi burada seçtim.
 @Composable
-fun ComposableArtworkWall(drawableResourceId: Int, modifier: Modifier) {
+fun ComposableArtworkWall(drawableResourceId: Int, modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(drawableResourceId),
         contentDescription = null,
-        modifier.fillMaxWidth().height(300.dp)
+        modifier
+            .fillMaxWidth()
+            .height(500.dp),
+        contentScale = ContentScale.Crop
+        //Resimlerin boyutları en boy olarak ölçeklendirildi.
     )
 }
 
