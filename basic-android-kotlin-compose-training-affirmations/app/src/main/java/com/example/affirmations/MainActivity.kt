@@ -45,6 +45,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//Burada uygulamayı oluşturuyor ve affirmationList composable'nı çağırıyor
+//ona da gerekli değerleri vermek için oluşturduğu dataSource değerlerini veriyor.
 @Composable
 fun AffirmationsApp() {
     AffirmationList(
@@ -66,8 +68,11 @@ fun AffirmationList(affirmationList: List<Affirmation>, modifier: Modifier = Mod
 
 @Composable
 fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
+    //Card bir layout oluyor. Bu layout bir kart gibi görüntü veriyor.
     Card(modifier = modifier) {
         Column {
+            //Burada ımage için maks genişlik veriyor. Sonra yüksekliğini ayarlıyor
+            //son olarakta içeriği uygun şekilde ayarlıyor.
             Image(
                 painter = painterResource(affirmation.imageResourceId),
                 contentDescription = stringResource(affirmation.stringResourceId),
