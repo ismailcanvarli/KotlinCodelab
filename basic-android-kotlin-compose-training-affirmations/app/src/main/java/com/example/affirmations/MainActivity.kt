@@ -56,7 +56,11 @@ fun AffirmationsApp() {
 
 @Composable
 fun AffirmationList(affirmationList: List<Affirmation>, modifier: Modifier = Modifier) {
+    //Scrollable list lazyColumn ile oluşturulur.
+    //item sadece lazyColumn'a ait bir öğe. İçindeki eşyaları tanımılıyor.
     LazyColumn(modifier = modifier) {
+        //Burada itemler o nesneye gelindiğinde oluşturuluyor.
+        //bu sayede optimizasyon sağlanıyor.
         items(affirmationList) { affirmation ->
             AffirmationCard(
                 affirmation = affirmation,
