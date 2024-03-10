@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
 //ona da gerekli değerleri vermek için oluşturduğu dataSource değerlerini veriyor.
 @Composable
 fun AffirmationsApp() {
+    //App çalıştığı zaman liste dataSource sınıfından çağırılıyor.
     AffirmationList(
         affirmationList = Datasource().loadAffirmations(),
     )
