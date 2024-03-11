@@ -141,3 +141,13 @@ fun WoofPreview() {
         WoofApp()
     }
 }
+
+//Dark theme için bir preview ekliyoruz.
+//Bu sayede hem aydınlık hemde karanlık ekran için theme oluyor
+@Preview
+@Composable
+fun WoofDarkThemePreview() {
+    WoofTheme(darkTheme = true) {
+        WoofApp()
+    }
+}
