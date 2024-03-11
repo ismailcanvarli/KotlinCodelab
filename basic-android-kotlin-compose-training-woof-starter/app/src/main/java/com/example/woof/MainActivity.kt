@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2023 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.woof
 
 import android.os.Bundle
@@ -60,6 +44,7 @@ class MainActivity : ComponentActivity() {
 
 /**
  * Composable that displays an app bar and a list of dogs.
+ * Burada dogs dediği Dog.kt sınıfından aldığı listOf listesi
  */
 @Composable
 fun WoofApp() {
@@ -121,6 +106,7 @@ fun DogIcon(
  * @param dogName is the resource ID for the string of the dog's name
  * @param dogAge is the Int that represents the dog's age
  * @param modifier modifiers to set to this composable
+ * burada stringRes dememizin sebebi o değeri text'e verecepimiz için.
  */
 @Composable
 fun DogInformation(
