@@ -3,7 +3,8 @@ package com.example.buildgrid.data
 import com.example.buildgrid.R
 import com.example.buildgrid.model.Topic
 
-//burada ise topics sınıfı kullanılarak veriler liste haline getiriliyor
+//burada ise topics sınıfı kullanılarak veriler liste haline getiriliyor.
+//Veriler burada ekleniyor. Topics kısmında ki model dosyasında sadece veriler bir araya getiriliyor.
 object DataSource {
     val topics = listOf(
         Topic(R.string.architecture, 58, R.drawable.architecture),
