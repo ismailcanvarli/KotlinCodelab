@@ -52,7 +52,9 @@ class MainActivity : ComponentActivity() {
 fun WoofApp() {
     LazyColumn {
         items(dogs) {
-            DogItem(dog = it)
+            DogItem(
+                dog = it,
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
         }
     }
 }
