@@ -71,7 +71,9 @@ fun WoofApp() {/*
         LazyColumn(contentPadding = it) {
             items(dogs) {
                 DogItem(
-                    dog = it, modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
+                    dog = it,
+                    expanded = false,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
                 )
             }
         }
@@ -86,7 +88,9 @@ fun WoofApp() {/*
  */
 @Composable
 fun DogItem(
-    dog: Dog, modifier: Modifier = Modifier
+    dog: Dog,
+    expanded: Boolean,
+    modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier) {
         Row(
@@ -96,6 +100,11 @@ fun DogItem(
         ) {
             DogIcon(dog.imageResourceId)
             DogInformation(dog.name, dog.age)
+            //card'ın içine icon ve köpek bilgisinin yanına ekledik
+            DogItemButton(
+                expanded = expanded,
+                onClick = { /*TODO*/ }
+            )
         }
     }
 }
