@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -27,6 +28,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -73,7 +78,6 @@ fun WoofApp() {/*
             items(dogs) {
                 DogItem(
                     dog = it,
-                    expanded = false,
                     modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
                 )
             }
@@ -89,9 +93,11 @@ fun WoofApp() {/*
  */
 @Composable
 fun DogItem(
-    dog: Dog, expanded: Boolean, modifier: Modifier = Modifier
+    dog: Dog, modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier) {
+        //Butonun genişletme işlemini default olarak kapalıya ayarladık
+        var expanded by remember { mutableStateOf(false) }
         //Bir colum oluşturduk üst satırda köpeğin bilgileri var
         //alt satırda köpeklerin hobby bilgisi var.
         Column {
@@ -105,16 +111,22 @@ fun DogItem(
                 //aşağı açma butonu ile resmin arasına boşluk bıraktık.
                 Spacer(modifier = Modifier.weight(1f))
                 //card'ın içine icon ve köpek bilgisinin yanına ekledik
-                DogItemButton(expanded = expanded, onClick = { /*TODO*/ })
+                //Butona basıldığında durumunu değiştiriyoruz.
+                DogItemButton(
+                    expanded = expanded,
+                    onClick = { expanded = !expanded})
             }
-            DogHobby(
-                dog.hobbies, modifier = Modifier.padding(
-                    start = dimensionResource(R.dimen.padding_medium),
-                    top = dimensionResource(R.dimen.padding_small),
-                    end = dimensionResource(R.dimen.padding_medium),
-                    bottom = dimensionResource(R.dimen.padding_medium)
+            //Eğer expand(Genişletilirse) hobby gözükecek
+            if (expanded) {
+                DogHobby(
+                    dog.hobbies, modifier = Modifier.padding(
+                        start = dimensionResource(R.dimen.padding_medium),
+                        top = dimensionResource(R.dimen.padding_small),
+                        end = dimensionResource(R.dimen.padding_medium),
+                        bottom = dimensionResource(R.dimen.padding_medium)
+                    )
                 )
-            )
+            }
         }
     }
 }
@@ -217,9 +229,10 @@ private fun DogItemButton(
         onClick = onClick, modifier = modifier
     ) {
         //Icon ekledik açıkalamsını girdik rengini girdik.
-        //tıklanabilir öğeyi genişletmek için expnad more'u ekledik
+        //tıklanabilir öğeyi genişletmek için expnad more'u ekledik.
+        //Eğer sayfa genişletildiyse açıldıysa farklı icon genişletilmediyse farklı icon
         Icon(
-            imageVector = Icons.Filled.ExpandMore,
+            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
             contentDescription = stringResource(R.string.expand_button_content_description),
             tint = MaterialTheme.colorScheme.secondary
         )
