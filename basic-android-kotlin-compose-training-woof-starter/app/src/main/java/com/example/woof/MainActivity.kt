@@ -14,9 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -55,23 +59,19 @@ class MainActivity : ComponentActivity() {
  * Burada dogs dediği Dog.kt sınıfından aldığı listOf listesi
  */
 @Composable
-fun WoofApp() {
-    /*
+fun WoofApp() {/*
     Scaffold (iskelet) ekledik. ve bunu content padding it ile
     diğer şeylerle üst üste gelmesini engelledik.
     Scaffold da topBar ekledik ve onun için oluşturduğumuz
     woofTopAppBar composable'nı ekledik
      */
-    Scaffold(
-        topBar = {
-            WoofTopAppBar()
-        }
-    ) { it ->
+    Scaffold(topBar = {
+        WoofTopAppBar()
+    }) { it ->
         LazyColumn(contentPadding = it) {
             items(dogs) {
                 DogItem(
-                    dog = it,
-                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
+                    dog = it, modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
                 )
             }
         }
@@ -86,8 +86,7 @@ fun WoofApp() {
  */
 @Composable
 fun DogItem(
-    dog: Dog,
-    modifier: Modifier = Modifier
+    dog: Dog, modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier) {
         Row(
@@ -109,8 +108,7 @@ fun DogItem(
  */
 @Composable
 fun DogIcon(
-    @DrawableRes dogIcon: Int,
-    modifier: Modifier = Modifier
+    @DrawableRes dogIcon: Int, modifier: Modifier = Modifier
 ) {
     //image'i clip ile shape'ten small dedik
     //sonrasında contentScale ile tam yuvarlak hale getirdik
@@ -139,9 +137,7 @@ fun DogIcon(
  */
 @Composable
 fun DogInformation(
-    @StringRes dogName: Int,
-    dogAge: Int,
-    modifier: Modifier = Modifier
+    @StringRes dogName: Int, dogAge: Int, modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         Text(
@@ -183,9 +179,33 @@ fun WoofTopAppBar(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.displayLarge
                 )
             }
-        },
-        modifier = modifier
+        }, modifier = modifier
     )
+}
+
+/*
+Çubuğa basıldığında aşağı doğru açılan expand more işlevini yapacağız
+Açılıp açılmadığını kontrol etmek için expanded değişkenini
+basılıp basılmadığını kontrol etmek içinde onClick fonksiyonunu kullanıyoruz
+ */
+@Composable
+private fun DogItemButton(
+    expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier
+) {
+    //Aşşağı indirme görseline tıkladığında aşağı indirme işlemi yapsın diye
+    //icon button'u ekledik
+    IconButton(
+        onClick = onClick, modifier = modifier
+    ) {
+        //Icon ekledik açıkalamsını girdik rengini girdik.
+        //tıklanabilir öğeyi genişletmek için expnad more'u ekledik
+        Icon(
+            imageVector = Icons.Filled.ExpandMore,
+            contentDescription = stringResource(R.string.expand_button_content_description),
+            tint = MaterialTheme.colorScheme.secondary
+        )
+    }
+
 }
 
 /**
