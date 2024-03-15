@@ -5,6 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -98,9 +101,23 @@ fun DogItem(
     Card(modifier = modifier) {
         //Butonun genişletme işlemini default olarak kapalıya ayarladık
         var expanded by remember { mutableStateOf(false) }
-        //Bir colum oluşturduk üst satırda köpeğin bilgileri var
-        //alt satırda köpeklerin hobby bilgisi var.
-        Column {
+        /*Bir colum oluşturduk üst satırda köpeğin bilgileri var
+        alt satırda köpeklerin hobby bilgisi var.
+        Buradaki column'a bir animation(animasyon) ekliyoruz.
+        Ekleyeceğimiz bu animasyonun ismi spring animation
+        çekip bıraktığımızda eski haline geri dönüyor.
+        eski haline dönerken ekstra sıçrama olmasın diye noBouncy'i ekledik
+        yay animasyonunu biraz daha sert hale getirmek için medium seviyeyi seçtik
+        */
+        Column(
+            modifier = Modifier
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMedium
+                    )
+                )
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
