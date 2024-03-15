@@ -89,24 +89,31 @@ fun WoofApp() {/*
  */
 @Composable
 fun DogItem(
-    dog: Dog,
-    expanded: Boolean,
-    modifier: Modifier = Modifier
+    dog: Dog, expanded: Boolean, modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_small))
-        ) {
-            DogIcon(dog.imageResourceId)
-            DogInformation(dog.name, dog.age)
-            //aşağı açma butonu ile resmin arasına boşluk bıraktık.
-            Spacer(modifier = Modifier.weight(1f))
-            //card'ın içine icon ve köpek bilgisinin yanına ekledik
-            DogItemButton(
-                expanded = expanded,
-                onClick = { /*TODO*/ }
+        //Bir colum oluşturduk üst satırda köpeğin bilgileri var
+        //alt satırda köpeklerin hobby bilgisi var.
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+            ) {
+                DogIcon(dog.imageResourceId)
+                DogInformation(dog.name, dog.age)
+                //aşağı açma butonu ile resmin arasına boşluk bıraktık.
+                Spacer(modifier = Modifier.weight(1f))
+                //card'ın içine icon ve köpek bilgisinin yanına ekledik
+                DogItemButton(expanded = expanded, onClick = { /*TODO*/ })
+            }
+            DogHobby(
+                dog.hobbies, modifier = Modifier.padding(
+                    start = dimensionResource(R.dimen.padding_medium),
+                    top = dimensionResource(R.dimen.padding_small),
+                    end = dimensionResource(R.dimen.padding_medium),
+                    bottom = dimensionResource(R.dimen.padding_medium)
+                )
             )
         }
     }
@@ -217,7 +224,27 @@ private fun DogItemButton(
             tint = MaterialTheme.colorScheme.secondary
         )
     }
+}
 
+/*
+Köpeklerin hobilerin için oluşturduğum composable.
+2 adet text var birisinde hakkında yazacak
+diğerkinde ise o köpeğe ait hobby bulunacak.
+ */
+@Composable
+fun DogHobby(
+    @StringRes dogHobby: Int, modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+    ) {
+        Text(
+            text = stringResource(R.string.about), style = MaterialTheme.typography.labelSmall
+        )
+        Text(
+            text = stringResource(dogHobby), style = MaterialTheme.typography.labelSmall
+        )
+    }
 }
 
 /**
