@@ -2,7 +2,6 @@ package com.example.superheroapp.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.example.superheroapp.R
 
 /*
     Burada kullanacağımız kahramanların fotoğraflarını
