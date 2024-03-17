@@ -2,6 +2,10 @@ package com.example.superheroapp.model
 
 import com.example.superheroapp.R
 
+/*
+Süper kahramanları listeye ekleme işlemini yaptık.
+ */
+
 object HeroesRepository {
     val heroes = listOf(
         Hero(

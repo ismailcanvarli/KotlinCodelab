@@ -36,9 +36,11 @@ class MainActivity : ComponentActivity() {
 
 /**
  * Composable that displays an app bar and a list of heroes.
+ * Süper kahramanların listesini ekledik
  */
 @Composable
 fun SuperheroesApp() {
+    //Scaffold(iskelet) kullandık TopAppBar için
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -48,6 +50,8 @@ fun SuperheroesApp() {
         /* Important: It is not a good practice to access data source directly from the UI.
         In later units you will learn how to use ViewModel in such scenarios that takes the
         data source as a dependency and exposes heroes.
+        Ui'dan direk verilere ulaşmak çok mantıklı ve pratic değil.
+        İlerleyen aşamada view model öğreneceğiz. Orada bu işi yapacağız
          */
         val heroes = HeroesRepository.heroes
         HeroesList(heroes = heroes, contentPadding = it)
@@ -56,8 +60,10 @@ fun SuperheroesApp() {
 
 /**
  * Composable that displays a Top Bar with an icon and text.
+ *Composable'da top app bard ve ve teşt gösteriliyor
  *
  * @param modifier modifiers to set to this composable
+ * Center align top app bar için bu aşağıdaki OptIn kısmını kullanmak zorundayız
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

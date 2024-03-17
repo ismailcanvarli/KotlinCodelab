@@ -105,7 +105,7 @@ fun SuperheroAppTheme(
         }
     }
 
-    //Temaya shapes eklendi
+    //Kullandığımız temaya eklediğimiz renkler yazı stili şekiller eklendi
     MaterialTheme(
         colorScheme = colorScheme, typography = Typography, shapes = Shapes, content = content
     )

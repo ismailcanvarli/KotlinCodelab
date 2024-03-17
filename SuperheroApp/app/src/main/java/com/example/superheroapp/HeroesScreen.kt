@@ -43,6 +43,14 @@ import com.example.superheroapp.model.Hero
 import com.example.superheroapp.model.HeroesRepository
 import com.example.superheroapp.ui.theme.SuperheroAppTheme
 
+/*
+Bu sınıfı tüm composable'ları mainActivity'de yazmayalım diye oluşturduk
+ */
+
+/*
+Bu fonksiyon, bir kahraman listesini görüntülemek için tasarlanmıştır.
+Kod, animasyonlarla listeyi oluşturur ve listeye her öğe eklenirken giriş animasyonları uygular.
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HeroesList(
@@ -57,7 +65,8 @@ fun HeroesList(
         }
     }
 
-    // Fade in entry animation for the entire list
+    // Bu kod parçası, AnimatedVisibility bileşenini kullanarak bir animasyonlu görünürlük efekti ekler.
+    // Bu bileşen, içerdiği içeriği görünür veya görünmez hale getirirken animasyonlar uygular.
     AnimatedVisibility(
         visibleState = visibleState,
         enter = fadeIn(
