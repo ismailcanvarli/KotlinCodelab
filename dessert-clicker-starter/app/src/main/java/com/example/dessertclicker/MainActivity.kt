@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -55,10 +56,56 @@ import com.example.dessertclicker.data.Datasource
 import com.example.dessertclicker.model.Dessert
 import com.example.dessertclicker.ui.theme.DessertClickerTheme
 
+//Logcat'ta yaptığımız değişiklikleri görmek için oluşturduk
+//sınıfın ismini veriyoruzki neresi için kullanıldığı belli olsun
+private const val TAG = "MainActivity"
+
 class MainActivity : ComponentActivity() {
+    //Acticity lifecycle da kullandığımız metodlar bulunmakta.
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart Called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume Called")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG, "onRestart Called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause Called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop Called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy Called")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        /*
+        Buraya geldiğinde log kaydını logcat'a yazdırıyoruz.
+        Burada Log. dan sonraki harfler o logun(kaydın) cinsini belirtir.
+        i (information) bilgi mesajları için,
+        d (debug) ayıklama mesajları için,
+        e (error) hata mesajları için
+        w (warning) uyarı mesajları için
+        Burada TAG değişkenine biz sınıfın adını verdik
+        msg değişkeni ise asıl logcat'de yazdırılan değişkendir.
+         */
+        Log.d(TAG, "onCreate Called")
         //Kullanıcı arayüz düzenini belirtir.
         setContent {
             DessertClickerTheme {
