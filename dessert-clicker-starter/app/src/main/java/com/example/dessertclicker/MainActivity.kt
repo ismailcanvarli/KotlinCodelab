@@ -30,10 +30,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -94,8 +94,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
-        super.onCreate(savedInstanceState)
-        /*
+        super.onCreate(savedInstanceState)/*
         Buraya geldiğinde log kaydını logcat'a yazdırıyoruz.
         Burada Log. dan sonraki harfler o logun(kaydın) cinsini belirtir.
         i (information) bilgi mesajları için,
@@ -126,8 +125,7 @@ class MainActivity : ComponentActivity() {
  * Determine which dessert to show.
  */
 fun determineDessertToShow(
-    desserts: List<Dessert>,
-    dessertsSold: Int
+    desserts: List<Dessert>, dessertsSold: Int
 ): Dessert {
     var dessertToShow = desserts.first()
     for (dessert in desserts) {
@@ -152,8 +150,7 @@ private fun shareSoldDessertsInformation(intentContext: Context, dessertsSold: I
     val sendIntent = Intent().apply {
         action = Intent.ACTION_SEND
         putExtra(
-            Intent.EXTRA_TEXT,
-            intentContext.getString(R.string.share_text, dessertsSold, revenue)
+            Intent.EXTRA_TEXT, intentContext.getString(R.string.share_text, dessertsSold, revenue)
         )
         type = "text/plain"
     }
@@ -191,30 +188,29 @@ private fun DessertClickerApp(
         mutableStateOf(desserts[currentDessertIndex].imageId)
     }
 
-    Scaffold(
-        topBar = {
-            val intentContext = LocalContext.current
-            val layoutDirection = LocalLayoutDirection.current
-            DessertClickerAppBar(
-                onShareButtonClicked = {
-                    shareSoldDessertsInformation(
-                        intentContext = intentContext,
-                        dessertsSold = dessertsSold,
-                        revenue = revenue
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = WindowInsets.safeDrawing.asPaddingValues()
-                            .calculateStartPadding(layoutDirection),
-                        end = WindowInsets.safeDrawing.asPaddingValues()
-                            .calculateEndPadding(layoutDirection),
-                    )
-                    .background(MaterialTheme.colorScheme.primary)
-            )
-        }
-    ) { contentPadding ->
+    Scaffold(topBar = {
+        val intentContext = LocalContext.current
+        val layoutDirection = LocalLayoutDirection.current
+        DessertClickerAppBar(
+            onShareButtonClicked = {
+                shareSoldDessertsInformation(
+                    intentContext = intentContext,
+                    dessertsSold = dessertsSold,
+                    revenue = revenue
+                )
+            }, modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = WindowInsets.safeDrawing
+                        .asPaddingValues()
+                        .calculateStartPadding(layoutDirection),
+                    end = WindowInsets.safeDrawing
+                        .asPaddingValues()
+                        .calculateEndPadding(layoutDirection),
+                )
+                .background(MaterialTheme.colorScheme.primary)
+        )
+    }) { contentPadding ->
         DessertClickerScreen(
             revenue = revenue,
             dessertsSold = dessertsSold,
@@ -237,8 +233,7 @@ private fun DessertClickerApp(
 
 @Composable
 private fun DessertClickerAppBar(
-    onShareButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    onShareButtonClicked: () -> Unit, modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
@@ -306,9 +301,7 @@ fun DessertClickerScreen(
 
 @Composable
 private fun TransactionInfo(
-    revenue: Int,
-    dessertsSold: Int,
-    modifier: Modifier = Modifier
+    revenue: Int, dessertsSold: Int, modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         DessertsSoldInfo(
