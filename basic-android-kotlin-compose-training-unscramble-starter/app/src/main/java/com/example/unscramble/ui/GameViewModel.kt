@@ -1,3 +1,7 @@
+/*
+View model dosyamızı burada oluşturuyoruz.
+ */
+
 package com.example.unscramble.ui
 
 import androidx.lifecycle.ViewModel
@@ -12,9 +16,6 @@ private lateinit var currentWord: String
 // Kullanılmış kelimelerin listesini tutuyoruz.
 private var usedWords: MutableSet<String> = mutableSetOf()
 
-/*
-View model dosyamızı burada oluşturuyoruz.
- */
 class GameViewModel : ViewModel() {
     //Oyunun başlangıcında oyunu sıfırlıyoruz.
     init {
