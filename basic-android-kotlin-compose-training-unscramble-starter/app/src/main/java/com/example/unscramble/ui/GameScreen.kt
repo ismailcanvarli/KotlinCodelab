@@ -40,6 +40,11 @@ import androidx.compose.ui.unit.sp
 import com.example.unscramble.R
 import com.example.unscramble.ui.theme.UnscrambleTheme
 
+/*
+Burada oyunun genel yapısı bulunmaktadır.
+Diğer composable'lar buranın içine konumlanmıştır.
+Butonlar ve başlıkta buradadır.
+ */
 @Composable
 fun GameScreen() {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -97,6 +102,11 @@ fun GameScreen() {
     }
 }
 
+/*
+Kişinin puanını gösteren composable'dır. Card içinde tasarlanmıştırç
+Başlangıç değeri 0'dır.
+ */
+
 @Composable
 fun GameStatus(score: Int, modifier: Modifier = Modifier) {
     Card(
@@ -110,6 +120,9 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
     }
 }
 
+/*
+Rastgele kelimenin gösterildiği ve bizim tahminimizi girdiğimiz yer.
+ */
 @Composable
 fun GameLayout(modifier: Modifier = Modifier) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -142,6 +155,7 @@ fun GameLayout(modifier: Modifier = Modifier) {
                 textAlign = TextAlign.Center,
                 style = typography.titleMedium
             )
+            //Bu çevresinde çizgi olan text field oluyor. Diğerki filled
             OutlinedTextField(
                 value = "",
                 singleLine = true,
@@ -167,7 +181,8 @@ fun GameLayout(modifier: Modifier = Modifier) {
 }
 
 /*
- * Creates and shows an AlertDialog with final score.
+ * burada kullanıcının sonuç skorunu gösteren bir alet dialog vardır.
+ * AlertDialog içinde ise tekrar oynama ve oyundan çıkma seçenekleri vardır.
  */
 @Composable
 private fun FinalScoreDialog(

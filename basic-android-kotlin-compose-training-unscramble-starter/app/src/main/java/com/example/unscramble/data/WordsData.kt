@@ -1,5 +1,6 @@
 /*
 Uygulama içinde kullanacağımız kelimelerin listesi burada oluşturulmuş.
+Oyunda kaç tane kelime olacağı ve doğru bilindiğinde artacak puan bilgiside var.
  */
 
 package com.example.unscramble.data
