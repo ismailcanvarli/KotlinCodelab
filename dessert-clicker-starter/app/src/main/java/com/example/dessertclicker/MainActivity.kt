@@ -175,15 +175,18 @@ private fun shareSoldDessertsInformation(intentContext: Context, dessertsSold: I
 private fun DessertClickerApp(
     desserts: List<Dessert>
 ) {
-
+    //Kazandığımız geliri text'te göstermek için takip edilebilir yaptık
     var revenue by remember { mutableStateOf(0) }
     var dessertsSold by remember { mutableStateOf(0) }
 
     val currentDessertIndex by remember { mutableStateOf(0) }
 
+    //Burada ise uygulama anlık olarak kapandığında bile değerleri saklamak
+    //için anlık tatlıların fiyatlarını tutuyoruz
     var currentDessertPrice by remember {
         mutableStateOf(desserts[currentDessertIndex].price)
     }
+    //burada da tatlıların fiyatlarını anlık olarak tutuyoruz
     var currentDessertImageId by remember {
         mutableStateOf(desserts[currentDessertIndex].imageId)
     }
