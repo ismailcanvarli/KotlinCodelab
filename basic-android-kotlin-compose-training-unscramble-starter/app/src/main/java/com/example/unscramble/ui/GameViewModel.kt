@@ -11,17 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-//mevcut kelimeyi alacak değişken oluşturduk.
-private lateinit var currentWord: String
-// Kullanılmış kelimelerin listesini tutuyoruz.
-private var usedWords: MutableSet<String> = mutableSetOf()
-
 class GameViewModel : ViewModel() {
-    //Oyunun başlangıcında oyunu sıfırlıyoruz.
-    init {
-        resetGame()
-    }
-
     // Game UI state
     //Değişen verileri gözlemlemek için oluşturduk
     // Bu değer sadece bu sınıf içinden değiştirilebilecek
@@ -29,6 +19,22 @@ class GameViewModel : ViewModel() {
 
     //başka sınıflar tarafından sadece görüntülenebilecek.
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
+
+    // Kullanılmış kelimelerin listesini tutuyoruz.
+    private var usedWords: MutableSet<String> = mutableSetOf()
+
+    //mevcut kelimeyi alacak değişken oluşturduk.
+    private lateinit var currentWord: String
+
+    //Oyunun başlangıcında oyunu sıfırlıyoruz.
+    init {
+        resetGame()
+    }
+
+    fun resetGame() {
+        usedWords.clear()
+        _uiState.value = GameUiState(currentScrambledWord = pickRandomWordAndShuffle())
+    }
 
     //Mevcut kelimeyi karıştırmak için kullanılan fonksiyon
     private fun shuffleCurrentWord(word: String): String {
@@ -53,8 +59,4 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    fun resetGame() {
-        usedWords.clear()
-        _uiState.value = GameUiState(currentScrambledWord = pickRandomWordAndShuffle())
-    }
 }
