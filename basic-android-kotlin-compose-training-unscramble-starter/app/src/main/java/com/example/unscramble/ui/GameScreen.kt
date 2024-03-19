@@ -79,7 +79,12 @@ fun GameScreen(
             style = typography.titleLarge,
         )
         //Gerekli değişimi aktarabilmek için gönderdiğimiz değeri aldığımız değere
+        //Kullanıcının yaptığı tahmin değerini alıyoruz
+        //kullanıdını tahminini değiştirme için view modelden gerekli fonk çağırıyoruz
         GameLayout(
+            onUserGuessChanged = {gameViewModel.updateUserGuess(it) },
+            userGuess = gameViewModel.userGuess,
+            onKeyboardDone = {},
             currentScrambledWord = gameUiState.currentScrambledWord,
             modifier = Modifier
                 .fillMaxWidth()
@@ -133,10 +138,17 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 /*
 Rastgele kelimenin gösterildiği ve bizim tahminimizi girdiğimiz yer.
 burada ki composable'a viewModel'dan gelen değeri veriyoruz.
+Kullanıcının tahminini veriyoruz
+Rastgele ürettiğimiz kelimeyi veriyoruz
+Kullanıcının tahminin ettiği kelimeyi veriyoruz.
  */
 @Composable
 fun GameLayout(
-    currentScrambledWord: String, modifier: Modifier = Modifier
+    onUserGuessChanged: (String) -> Unit,
+    userGuess: String,
+    onKeyboardDone: () -> Unit,
+    currentScrambledWord: String,
+    modifier: Modifier = Modifier
 ) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
@@ -167,7 +179,8 @@ fun GameLayout(
                 style = typography.titleMedium
             )
             //Bu çevresinde çizgi olan text field oluyor. Diğerki filled
-            OutlinedTextField(value = "",
+            OutlinedTextField(
+                value = userGuess,
                 singleLine = true,
                 shape = shapes.large,
                 modifier = Modifier.fillMaxWidth(),
@@ -176,7 +189,7 @@ fun GameLayout(
                     unfocusedContainerColor = colorScheme.surface,
                     disabledContainerColor = colorScheme.surface,
                 ),
-                onValueChange = { },
+                onValueChange = onUserGuessChanged,
                 label = { Text(stringResource(R.string.enter_your_word)) },
                 isError = false,
                 keyboardOptions = KeyboardOptions.Default.copy(

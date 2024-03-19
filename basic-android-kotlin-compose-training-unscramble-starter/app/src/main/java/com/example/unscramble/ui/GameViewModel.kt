@@ -4,12 +4,16 @@ View model dosyamızı burada oluşturuyoruz.
 
 package com.example.unscramble.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.unscramble.data.allWords
 import com.example.unscramble.model.GameUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+
 
 class GameViewModel : ViewModel() {
     // Game UI state
@@ -25,15 +29,19 @@ class GameViewModel : ViewModel() {
 
     //mevcut kelimeyi alacak değişken oluşturduk.
     private lateinit var currentWord: String
+    var userGuess by mutableStateOf("")
+        private set
 
     //Oyunun başlangıcında oyunu sıfırlıyoruz.
     init {
         resetGame()
     }
 
-    //Kullanılmış kelimeler listesini sıfırlıyoruz.
-    //Ui state'in değerini currentScrambledWord = pickRandomWordAndShuffle() fonksiyonu
-    //ile yeniden atıyoruz.
+    /*
+    Kullanılmış kelimeler listesini sıfırlıyoruz.
+    Ui state'in değerini currentScrambledWord = pickRandomWordAndShuffle() fonksiyonu
+    ile yeniden atıyoruz.
+     */
     fun resetGame() {
         usedWords.clear()
         _uiState.value = GameUiState(currentScrambledWord = pickRandomWordAndShuffle())
@@ -62,4 +70,7 @@ class GameViewModel : ViewModel() {
         }
     }
 
+    fun updateUserGuess(guessedWord: String) {
+        userGuess = guessedWord
+    }
 }
