@@ -52,8 +52,15 @@ GameScreen composable'a view model değerini verdik
 @Composable
 fun GameScreen(
     gameViewModel: GameViewModel = viewModel()
-) {
-    //ui durumunu belirtmek için bir değişken oluşturuk.
+) {/*
+    GameViewModel sınıfının uiState akışını collectAsState() fonksiyonuyla
+    gözlemleyerek gameUiState adında bir yerel değişkende saklıyor.
+    collectAsState() fonksiyonu, bir akışı izleyen Compose bileşenlerine,
+    akıştaki en son değeri sağlar. Bu sayede, gameUiState değişkeni, GameViewModel
+    sınıfında _uiState içeriğindeki değişikliklerin otomatik olarak takip edilmesini sağlar.
+    Yani, GameViewModel içindeki _uiState değiştiğinde, gameUiState otomatik olarak güncellenir
+    ve bu güncellenmiş değer, UI'nın doğru şekilde yeniden çizilmesini sağlar.
+     */
     val gameUiState by gameViewModel.uiState.collectAsState()
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
@@ -71,6 +78,7 @@ fun GameScreen(
             text = stringResource(R.string.app_name),
             style = typography.titleLarge,
         )
+        //Gerekli değişimi aktarabilmek için gönderdiğimiz değeri aldığımız değere
         GameLayout(
             currentScrambledWord = gameUiState.currentScrambledWord,
             modifier = Modifier
@@ -86,23 +94,17 @@ fun GameScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { }
-            ) {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = { }) {
                 Text(
-                    text = stringResource(R.string.submit),
-                    fontSize = 16.sp
+                    text = stringResource(R.string.submit), fontSize = 16.sp
                 )
             }
 
             OutlinedButton(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth()
+                onClick = { }, modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(R.string.skip),
-                    fontSize = 16.sp
+                    text = stringResource(R.string.skip), fontSize = 16.sp
                 )
             }
         }
@@ -130,17 +132,16 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 
 /*
 Rastgele kelimenin gösterildiği ve bizim tahminimizi girdiğimiz yer.
+burada ki composable'a viewModel'dan gelen değeri veriyoruz.
  */
 @Composable
 fun GameLayout(
-    currentScrambledWord: String,
-    modifier: Modifier = Modifier
+    currentScrambledWord: String, modifier: Modifier = Modifier
 ) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
     Card(
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+        modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(mediumPadding),
@@ -158,8 +159,7 @@ fun GameLayout(
                 color = colorScheme.onPrimary
             )
             Text(
-                text = currentScrambledWord,
-                style = typography.displayMedium
+                text = currentScrambledWord, style = typography.displayMedium
             )
             Text(
                 text = stringResource(R.string.instructions),
@@ -167,8 +167,7 @@ fun GameLayout(
                 style = typography.titleMedium
             )
             //Bu çevresinde çizgi olan text field oluyor. Diğerki filled
-            OutlinedTextField(
-                value = "",
+            OutlinedTextField(value = "",
                 singleLine = true,
                 shape = shapes.large,
                 modifier = Modifier.fillMaxWidth(),
@@ -183,10 +182,7 @@ fun GameLayout(
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
-                keyboardActions = KeyboardActions(
-                    onDone = { }
-                )
-            )
+                keyboardActions = KeyboardActions(onDone = { }))
         }
     }
 }
@@ -197,27 +193,22 @@ fun GameLayout(
  */
 @Composable
 private fun FinalScoreDialog(
-    score: Int,
-    onPlayAgain: () -> Unit,
-    modifier: Modifier = Modifier
+    score: Int, onPlayAgain: () -> Unit, modifier: Modifier = Modifier
 ) {
     val activity = (LocalContext.current as Activity)
 
-    AlertDialog(
-        onDismissRequest = {
-            // Dismiss the dialog when the user clicks outside the dialog or on the back
-            // button. If you want to disable that functionality, simply use an empty
-            // onCloseRequest.
-        },
+    AlertDialog(onDismissRequest = {
+        // Dismiss the dialog when the user clicks outside the dialog or on the back
+        // button. If you want to disable that functionality, simply use an empty
+        // onCloseRequest.
+    },
         title = { Text(text = stringResource(R.string.congratulations)) },
         text = { Text(text = stringResource(R.string.you_scored, score)) },
         modifier = modifier,
         dismissButton = {
-            TextButton(
-                onClick = {
-                    activity.finish()
-                }
-            ) {
+            TextButton(onClick = {
+                activity.finish()
+            }) {
                 Text(text = stringResource(R.string.exit))
             }
         },
@@ -225,8 +216,7 @@ private fun FinalScoreDialog(
             TextButton(onClick = onPlayAgain) {
                 Text(text = stringResource(R.string.play_again))
             }
-        }
-    )
+        })
 }
 
 @Preview(showBackground = true)

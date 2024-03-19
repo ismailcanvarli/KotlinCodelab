@@ -17,7 +17,7 @@ class GameViewModel : ViewModel() {
     // Bu değer sadece bu sınıf içinden değiştirilebilecek
     private val _uiState = MutableStateFlow(GameUiState())
 
-    //başka sınıflar tarafından sadece görüntülenebilecek.
+    //Observer(gözlemciler) tarafından akışını gözlemlenebilir hale getiriyor.
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
     // Kullanılmış kelimelerin listesini tutuyoruz.
@@ -31,6 +31,9 @@ class GameViewModel : ViewModel() {
         resetGame()
     }
 
+    //Kullanılmış kelimeler listesini sıfırlıyoruz.
+    //Ui state'in değerini currentScrambledWord = pickRandomWordAndShuffle() fonksiyonu
+    //ile yeniden atıyoruz.
     fun resetGame() {
         usedWords.clear()
         _uiState.value = GameUiState(currentScrambledWord = pickRandomWordAndShuffle())
