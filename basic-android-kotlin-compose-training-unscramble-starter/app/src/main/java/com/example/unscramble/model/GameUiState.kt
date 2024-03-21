@@ -2,7 +2,7 @@ package com.example.unscramble.model
 
 /*
 Burada ise model sınıfımızı oluşturuk.
-Mevcuttaki kelimenin bilgisini tutuyor.
+Değişen duruma sahip değerler burada bulunuyor.
  */
 
 data class GameUiState(
