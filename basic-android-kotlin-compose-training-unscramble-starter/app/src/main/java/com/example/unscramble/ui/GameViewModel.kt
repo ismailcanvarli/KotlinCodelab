@@ -107,4 +107,10 @@ class GameViewModel : ViewModel() {
         }
     }
 
+    //skip butonu için kullandık yeni cümleye geçiyoruz.
+    fun skipWord() {
+        updateGameState(_uiState.value.score)
+        // Reset user guess
+        updateUserGuess("")
+    }
 }

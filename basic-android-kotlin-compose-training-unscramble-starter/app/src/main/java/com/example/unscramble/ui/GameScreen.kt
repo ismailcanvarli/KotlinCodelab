@@ -90,6 +90,7 @@ fun GameScreen(
             currentScrambledWord = gameUiState.currentScrambledWord,
             //Kullanıcının tahmini doğrumu yanlış mı buradan bakıyoruz.
             isGuessWrong = gameUiState.isGuessedWordWrong,
+            wordCount = gameUiState.currentWordCount,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
@@ -111,16 +112,17 @@ fun GameScreen(
                 )
             }
 
+            //butona basıldığında yeni kelimeye geçecek
             OutlinedButton(
-                onClick = { }, modifier = Modifier.fillMaxWidth()
+                onClick = { gameViewModel.skipWord() }, modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(R.string.skip), fontSize = 16.sp
                 )
             }
         }
-
-        GameStatus(score = 0, modifier = Modifier.padding(20.dp))
+        //oyunun durumunda sokor değişkenini dinamik hale getirdik
+        GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
     }
 }
 
@@ -155,6 +157,7 @@ fun GameLayout(
     onKeyboardDone: () -> Unit,
     currentScrambledWord: String,
     isGuessWrong: Boolean,
+    wordCount: Int,
     modifier: Modifier = Modifier
 ) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -173,7 +176,8 @@ fun GameLayout(
                     .background(colorScheme.surfaceTint)
                     .padding(horizontal = 10.dp, vertical = 4.dp)
                     .align(alignment = Alignment.End),
-                text = stringResource(R.string.word_count, 0),
+                //Kelimelerin tahmin işlemi için bunu yapıyoruz.
+                text = stringResource(R.string.word_count, wordCount),
                 style = typography.titleMedium,
                 color = colorScheme.onPrimary
             )
