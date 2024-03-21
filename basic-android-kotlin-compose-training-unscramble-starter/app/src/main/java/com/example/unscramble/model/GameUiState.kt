@@ -6,5 +6,8 @@ Mevcuttaki kelimenin bilgisini tutuyor.
  */
 
 data class GameUiState(
-    val currentScrambledWord: String = ""
+    //Mevcut tahmin edilen değeri döndürüyoruz
+    val currentScrambledWord: String = "",
+    //Tahmin edilen değer yanlış değişkeni
+    val isGuessedWordWrong: Boolean = false,
 )

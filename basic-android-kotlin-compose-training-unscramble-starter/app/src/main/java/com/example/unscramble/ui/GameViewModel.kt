@@ -13,6 +13,7 @@ import com.example.unscramble.model.GameUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 
 class GameViewModel : ViewModel() {
@@ -73,4 +74,19 @@ class GameViewModel : ViewModel() {
     fun updateUserGuess(guessedWord: String) {
         userGuess = guessedWord
     }
+
+    //Kullanıcının tahmini ile değerinimizi kontrol ediyor.
+    fun checkUserGuess() {
+
+        if (userGuess.equals(currentWord, ignoreCase = true)) {
+        } else {
+            // Kullanıcının tahimini yanlışsa hata döndürüyor
+            _uiState.update { currentState ->
+                currentState.copy(isGuessedWordWrong = true)
+            }
+        }
+        // Reset user guess
+        updateUserGuess("")
+    }
+
 }
