@@ -121,8 +121,15 @@ fun GameScreen(
                 )
             }
         }
-        //oyunun durumunda sokor değişkenini dinamik hale getirdik
+        //oyunun durumunda skor değişkenini dinamik hale getirdik
         GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
+
+        if (gameUiState.isGameOver) {
+            FinalScoreDialog(
+                score = gameUiState.score,
+                onPlayAgain = { gameViewModel.resetGame() }
+            )
+        }
     }
 }
 
@@ -223,7 +230,9 @@ fun GameLayout(
  */
 @Composable
 private fun FinalScoreDialog(
-    score: Int, onPlayAgain: () -> Unit, modifier: Modifier = Modifier
+    score: Int,
+    onPlayAgain: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val activity = (LocalContext.current as Activity)
 
@@ -232,7 +241,9 @@ private fun FinalScoreDialog(
         // button. If you want to disable that functionality, simply use an empty
         // onCloseRequest.
     },
+        //başlık olarak tebrikler mesajı yazıyor
         title = { Text(text = stringResource(R.string.congratulations)) },
+        //skorun: 8 gibi bir yazı yazıyor sonucumuzu bize söylüyor.
         text = { Text(text = stringResource(R.string.you_scored, score)) },
         modifier = modifier,
         dismissButton = {
