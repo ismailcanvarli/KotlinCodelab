@@ -14,4 +14,6 @@ data class GameUiState(
     val score: Int = 0,
     //kullanıcının tahminde bulunduğu kelime sayısını tutuyoruz.
     val currentWordCount: Int = 1,
+    //Oyunun bitip bitmeme durumunu tutuyor.
+    val isGameOver: Boolean = false
 )
