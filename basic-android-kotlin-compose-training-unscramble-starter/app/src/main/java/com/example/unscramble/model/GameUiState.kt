@@ -10,4 +10,8 @@ data class GameUiState(
     val currentScrambledWord: String = "",
     //Tahmin edilen değer yanlış değişkeni
     val isGuessedWordWrong: Boolean = false,
+    //Kullanıcının skoru için değişken oluşturduk.
+    val score: Int = 0,
+    //kullanıcının tahminde bulunduğu kelime sayısını tutuyoruz.
+    val currentWordCount: Int = 1,
 )
