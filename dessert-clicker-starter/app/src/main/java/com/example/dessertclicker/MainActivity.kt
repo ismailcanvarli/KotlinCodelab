@@ -17,15 +17,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -37,23 +32,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
-import com.example.dessertclicker.data.Datasource
-import com.example.dessertclicker.model.Dessert
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.dessertclicker.data.DessertUiState
+import com.example.dessertclicker.ui.DessertViewModel
 import com.example.dessertclicker.ui.theme.DessertClickerTheme
 
 //Logcat'ta yaptığımız değişiklikleri görmek için oluşturduk
@@ -61,6 +55,40 @@ import com.example.dessertclicker.ui.theme.DessertClickerTheme
 private const val TAG = "MainActivity"
 
 class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)/*
+        Buraya geldiğinde log kaydını logcat'a yazdırıyoruz.
+        Burada Log. dan sonraki harfler o logun(kaydın) cinsini belirtir.
+        i (information) bilgi mesajları için,
+        d (debug) ayıklama mesajları için,
+        e (error) hata mesajları için
+        w (warning) uyarı mesajları için
+        Burada TAG değişkenine biz sınıfın adını verdik
+        msg değişkeni ise asıl logcat'de yazdırılan değişkendir.
+         */
+        Log.d(TAG, "onCreate Called")
+        //Kullanıcı arayüz düzenini belirtir.
+        setContent {
+            DessertClickerTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .statusBarsPadding(),
+                ) {
+                    /*
+                    veriyi önceden böyle direk uygulamanın içine veriyorduk.
+                    bunu view model ile yapacağımız için böyle vermiyoruz.
+                    DessertClickerApp(desserts = Datasource.dessertList)
+                     */
+                    DessertClickerApp()
+                }
+            }
+        }
+    }
+
     //Acticity lifecycle da kullandığımız metodlar bulunmakta.
     override fun onStart() {
         super.onStart()
@@ -91,141 +119,47 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         Log.d(TAG, "onDestroy Called")
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-        super.onCreate(savedInstanceState)/*
-        Buraya geldiğinde log kaydını logcat'a yazdırıyoruz.
-        Burada Log. dan sonraki harfler o logun(kaydın) cinsini belirtir.
-        i (information) bilgi mesajları için,
-        d (debug) ayıklama mesajları için,
-        e (error) hata mesajları için
-        w (warning) uyarı mesajları için
-        Burada TAG değişkenine biz sınıfın adını verdik
-        msg değişkeni ise asıl logcat'de yazdırılan değişkendir.
-         */
-        Log.d(TAG, "onCreate Called")
-        //Kullanıcı arayüz düzenini belirtir.
-        setContent {
-            DessertClickerTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .statusBarsPadding(),
-                ) {
-                    DessertClickerApp(desserts = Datasource.dessertList)
-                }
-            }
-        }
-    }
 }
 
-/**
- * Determine which dessert to show.
- */
-fun determineDessertToShow(
-    desserts: List<Dessert>, dessertsSold: Int
-): Dessert {
-    var dessertToShow = desserts.first()
-    for (dessert in desserts) {
-        if (dessertsSold >= dessert.startProductionAmount) {
-            dessertToShow = dessert
-        } else {
-            // The list of desserts is sorted by startProductionAmount. As you sell more desserts,
-            // you'll start producing more expensive desserts as determined by startProductionAmount
-            // We know to break as soon as we see a dessert who's "startProductionAmount" is greater
-            // than the amount sold.
-            break
-        }
-    }
+//Bir viewmodel nesnesi alıyor.
+@Composable
+private fun DessertClickerApp(viewModel: DessertViewModel = viewModel()) {
+    // ViewModel'den gelen tatlı durumu akışını toplar
+    // ve bu durumu bir State olarak saklar.
+    val uiState by viewModel.dessertUiState.collectAsState()
 
-    return dessertToShow
-}
-
-/**
- * Share desserts sold information using ACTION_SEND intent
- */
-private fun shareSoldDessertsInformation(intentContext: Context, dessertsSold: Int, revenue: Int) {
-    val sendIntent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(
-            Intent.EXTRA_TEXT, intentContext.getString(R.string.share_text, dessertsSold, revenue)
-        )
-        type = "text/plain"
-    }
-
-    val shareIntent = Intent.createChooser(sendIntent, null)
-
-    try {
-        ContextCompat.startActivity(intentContext, shareIntent, null)
-    } catch (e: ActivityNotFoundException) {
-        Toast.makeText(
-            intentContext,
-            intentContext.getString(R.string.sharing_not_available),
-            Toast.LENGTH_LONG
-        ).show()
-    }
+    // DessertClickerApp Composable'ini çağırır ve ViewModel'den gelen verileri aktarır.
+    // Kullanıcı tatlıya tıkladığında ViewModel'deki ilgili işlevi çağırır.
+    DessertClickerApp(
+        uiState = uiState, onDessertClicked = viewModel::onDessertClicked
+    )
 }
 
 @Composable
 private fun DessertClickerApp(
-    desserts: List<Dessert>
+    uiState: DessertUiState, onDessertClicked: () -> Unit
 ) {
-    //Kazandığımız geliri text'te göstermek için takip edilebilir yaptık
-    var revenue by remember { mutableStateOf(0) }
-    var dessertsSold by remember { mutableStateOf(0) }
+    // AppBar için gerekli olan Context'i alır.
+    val intentContext = LocalContext.current
 
-    val currentDessertIndex by remember { mutableStateOf(0) }
-
-    //Burada ise uygulama anlık olarak kapandığında bile değerleri saklamak
-    //için anlık tatlıların fiyatlarını tutuyoruz
-    var currentDessertPrice by remember {
-        mutableStateOf(desserts[currentDessertIndex].price)
-    }
-    //burada da tatlıların fiyatlarını anlık olarak tutuyoruz
-    var currentDessertImageId by remember {
-        mutableStateOf(desserts[currentDessertIndex].imageId)
-    }
-
+    // Scaffold, temel yapıyı oluşturur ve içeriği düzenler.
     Scaffold(topBar = {
-        val intentContext = LocalContext.current
-        val layoutDirection = LocalLayoutDirection.current
-        DessertClickerAppBar(
-            onShareButtonClicked = {
-                shareSoldDessertsInformation(
-                    intentContext = intentContext,
-                    dessertsSold = dessertsSold,
-                    revenue = revenue
-                )
-            }, modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = WindowInsets.safeDrawing
-                        .asPaddingValues()
-                        .calculateStartPadding(layoutDirection),
-                    end = WindowInsets.safeDrawing
-                        .asPaddingValues()
-                        .calculateEndPadding(layoutDirection),
-                )
-                .background(MaterialTheme.colorScheme.primary)
-        )
+        //üst çubuğu oluşturan bir Composable işlevi çağırır.
+        DessertClickerAppBar(onShareButtonClicked = {
+            // Paylaşma düğmesine tıklandığında satılan tatlılar hakkındaki bilgileri paylaşır.
+            shareSoldDessertsInformation(
+                intentContext = intentContext,
+                dessertsSold = uiState.dessertsSold,
+                revenue = uiState.revenue
+            )
+        })
     }) { contentPadding ->
+        // ana ekran içeriğini oluşturan bir Composable işlevi çağırır.
         DessertClickerScreen(
-            revenue = revenue,
-            dessertsSold = dessertsSold,
-            dessertImageId = currentDessertImageId,
-            onDessertClicked = {
-
-                // Update the revenue
-                revenue += currentDessertPrice
-                dessertsSold++
-
-                // Show the next dessert
-                val dessertToShow = determineDessertToShow(desserts, dessertsSold)
-                currentDessertImageId = dessertToShow.imageId
-                currentDessertPrice = dessertToShow.price
-            },
+            revenue = uiState.revenue,
+            dessertsSold = uiState.dessertsSold,
+            dessertImageId = uiState.currentDessertImageId,
+            onDessertClicked = onDessertClicked,
             modifier = Modifier.padding(contentPadding)
         )
     }
@@ -236,7 +170,9 @@ private fun DessertClickerAppBar(
     onShareButtonClicked: () -> Unit, modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -291,9 +227,7 @@ fun DessertClickerScreen(
                 )
             }
             TransactionInfo(
-                revenue = revenue,
-                dessertsSold = dessertsSold,
-                modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer)
+                revenue = revenue, dessertsSold = dessertsSold
             )
         }
     }
@@ -303,7 +237,9 @@ fun DessertClickerScreen(
 private fun TransactionInfo(
     revenue: Int, dessertsSold: Int, modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier.background(Color.White)
+    ) {
         DessertsSoldInfo(
             dessertsSold = dessertsSold,
             modifier = Modifier
@@ -358,10 +294,41 @@ private fun DessertsSoldInfo(dessertsSold: Int, modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * Satılan tatlılar hakkındaki bilgileri ACTION_SEND intent'i kullanarak paylaşır.
+ */
+private fun shareSoldDessertsInformation(intentContext: Context, dessertsSold: Int, revenue: Int) {
+    // Paylaşma amacıyla bir Intent oluşturulur.
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        // Tatlıların satış bilgileri metin olarak eklenir.
+        putExtra(
+            Intent.EXTRA_TEXT, intentContext.getString(R.string.share_text, dessertsSold, revenue)
+        )
+        // Paylaş butonuna basıldığında paylaşılacak içeriğin türü belirlenir.
+        type = "text/plain"
+    }
+
+    // Kullanıcıya paylaşma seçenekleri sunmak için bir Intent oluşturulur.
+    val shareIntent = Intent.createChooser(sendIntent, null)
+
+    try {
+        // Paylaşma işlemi başlatılır.
+        ContextCompat.startActivity(intentContext, shareIntent, null)
+    } catch (e: ActivityNotFoundException) {
+        // Eğer paylaşma işlemi desteklenmiyorsa bir hata mesajı gösterilir.
+        Toast.makeText(
+            intentContext,
+            intentContext.getString(R.string.sharing_not_available),
+            Toast.LENGTH_LONG
+        ).show()
+    }
+}
+
 @Preview
 @Composable
 fun MyDessertClickerAppPreview() {
     DessertClickerTheme {
-        DessertClickerApp(listOf(Dessert(R.drawable.cupcake, 5, 0)))
+        DessertClickerApp(uiState = DessertUiState(), onDessertClicked = {})
     }
 }
