@@ -27,10 +27,10 @@ import com.example.cupcake.ui.components.FormattedPriceLabel
 import com.example.cupcake.ui.theme.CupcakeTheme
 
 /**
- * Composable that displays the list of items as [RadioButton] options,
- * [onSelectionChanged] lambda that notifies the parent composable when a new value is selected,
- * [onCancelButtonClicked] lambda that cancels the order when user clicks cancel and
- * [onNextButtonClicked] lambda that triggers the navigation to next screen
+ * Öğelerin listesini [RadioButton] seçenekleri olarak görüntüleyen bir Composable.
+ * [onSelectionChanged] lambda ifadesi, yeni bir değer seçildiğinde üst düzey Composable'yi bildiren bir bildirimdir.
+ * [onCancelButtonClicked] lambda ifadesi, kullanıcı iptal butonuna tıkladığında siparişi iptal eder.
+ * [onNextButtonClicked] lambda ifadesi, bir sonraki ekrana geçişi tetikleyen bir bildirimdir.
  */
 @Composable
 fun SelectOptionScreen(

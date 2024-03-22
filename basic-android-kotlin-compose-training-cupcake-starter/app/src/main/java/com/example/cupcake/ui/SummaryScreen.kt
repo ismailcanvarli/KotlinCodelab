@@ -26,9 +26,9 @@ import com.example.cupcake.ui.components.FormattedPriceLabel
 import com.example.cupcake.ui.theme.CupcakeTheme
 
 /**
- * This composable expects [orderUiState] that represents the order state, [onCancelButtonClicked]
- * lambda that triggers canceling the order and passes the final order to [onSendButtonClicked]
- * lambda
+ * Bu Composable, sipariş durumunu temsil eden [orderUiState]'i bekler,
+ * siparişi iptal etmeyi tetikleyen ve son siparişi [onSendButtonClicked]
+ * lambda ifadesine iletir [onCancelButtonClicked] lambda ifadesini bekler.
  */
 @Composable
 fun OrderSummaryScreen(

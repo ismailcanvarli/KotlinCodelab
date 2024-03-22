@@ -8,7 +8,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.cupcake.R
 
 /**
- * Composable that displays formatted [price] that will be formatted and displayed on screen
+ * Ekranda biçimlendirilmiş olarak gösterilecek [price]'ı görüntüleyen bir Composable.
  */
 @Composable
 fun FormattedPriceLabel(subtotal: String, modifier: Modifier = Modifier) {

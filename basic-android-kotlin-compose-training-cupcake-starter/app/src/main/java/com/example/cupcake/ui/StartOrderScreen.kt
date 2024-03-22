@@ -27,9 +27,9 @@ import com.example.cupcake.data.DataSource
 import com.example.cupcake.ui.theme.CupcakeTheme
 
 /**
- * Composable that allows the user to select the desired cupcake quantity and expects
- * [onNextButtonClicked] lambda that expects the selected quantity and triggers the navigation to
- * next screen
+ * Kullanıcının istenen cupcake miktarını seçmesine olanak tanıyan ve
+ * [onNextButtonClicked] lambda ifadesini bekleyen bir Composable.
+ * Bu lambda, seçilen miktarı alır ve bir sonraki ekrana geçişi tetikler.
  */
 @Composable
 fun StartOrderScreen(

@@ -11,39 +11,38 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-/** Price for a single cupcake */
+/** Bir cupcake için fiyat */
 private const val PRICE_PER_CUPCAKE = 2.00
 
-/** Additional cost for same day pickup of an order */
+/** Aynı gün alım için ekstra maliyet */
 private const val PRICE_FOR_SAME_DAY_PICKUP = 3.00
 
 /**
- * [OrderViewModel] holds information about a cupcake order in terms of quantity, flavor, and
- * pickup date. It also knows how to calculate the total price based on these order details.
+ * [OrderViewModel], miktar, lezzet ve alım tarihi açısından bir cupcake siparişi hakkında
+ * bilgi saklar. Ayrıca, bu sipariş detaylarına dayanarak toplam fiyatı nasıl hesaplayacağını bilir.
  */
 class OrderViewModel : ViewModel() {
 
     /**
-     * Cupcake state for this order
+     * Bu siparişin cupcake durumu
      */
     private val _uiState = MutableStateFlow(OrderUiState(pickupOptions = pickupOptions()))
     val uiState: StateFlow<OrderUiState> = _uiState.asStateFlow()
 
     /**
-     * Set the quantity [numberCupcakes] of cupcakes for this order's state and update the price
+     * Bu siparişin durumu için cupcake miktarını [numberCupcakes] olarak ayarlar ve fiyatı günceller
      */
     fun setQuantity(numberCupcakes: Int) {
         _uiState.update { currentState ->
             currentState.copy(
-                quantity = numberCupcakes,
-                price = calculatePrice(quantity = numberCupcakes)
+                quantity = numberCupcakes, price = calculatePrice(quantity = numberCupcakes)
             )
         }
     }
 
     /**
-     * Set the [desiredFlavor] of cupcakes for this order's state.
-     * Only 1 flavor can be selected for the whole order.
+     * Bu siparişin durumu için cupcake'lerin [desiredFlavor]'ını ayarlar.
+     * Tüm sipariş için yalnızca 1 lezzet seçilebilir.
      */
     fun setFlavor(desiredFlavor: String) {
         _uiState.update { currentState ->
@@ -52,33 +51,31 @@ class OrderViewModel : ViewModel() {
     }
 
     /**
-     * Set the [pickupDate] for this order's state and update the price
+     * Bu siparişin durumu için [pickupDate]'i ayarlar ve fiyatı günceller.
      */
     fun setDate(pickupDate: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                date = pickupDate,
-                price = calculatePrice(pickupDate = pickupDate)
+                date = pickupDate, price = calculatePrice(pickupDate = pickupDate)
             )
         }
     }
 
     /**
-     * Reset the order state
+     * Sipariş durumunu sıfırlar.
      */
     fun resetOrder() {
         _uiState.value = OrderUiState(pickupOptions = pickupOptions())
     }
 
     /**
-     * Returns the calculated price based on the order details.
+     * Sipariş detaylarına dayanarak hesaplanmış fiyatı döndürür.
      */
     private fun calculatePrice(
-        quantity: Int = _uiState.value.quantity,
-        pickupDate: String = _uiState.value.date
+        quantity: Int = _uiState.value.quantity, pickupDate: String = _uiState.value.date
     ): String {
         var calculatedPrice = quantity * PRICE_PER_CUPCAKE
-        // If the user selected the first option (today) for pickup, add the surcharge
+        // Eğer kullanıcı alım için ilk seçeneği (bugün) seçtiyse, ek ücret ekler
         if (pickupOptions()[0] == pickupDate) {
             calculatedPrice += PRICE_FOR_SAME_DAY_PICKUP
         }
@@ -87,13 +84,14 @@ class OrderViewModel : ViewModel() {
     }
 
     /**
-     * Returns a list of date options starting with the current date and the following 3 dates.
+     * Şu andan itibaren başlayarak, mevcut tarihi ve
+     * sonraki 3 tarihi içeren bir tarih seçenekleri listesi döndürür.
      */
     private fun pickupOptions(): List<String> {
         val dateOptions = mutableListOf<String>()
         val formatter = SimpleDateFormat("E MMM d", Locale.getDefault())
         val calendar = Calendar.getInstance()
-        // add current date and the following 3 dates.
+        // mevcut tarihi ve sonraki 3 tarihi ekler.
         repeat(4) {
             dateOptions.add(formatter.format(calendar.time))
             calendar.add(Calendar.DATE, 1)

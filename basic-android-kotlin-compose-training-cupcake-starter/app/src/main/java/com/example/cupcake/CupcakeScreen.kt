@@ -20,7 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.cupcake.ui.OrderViewModel
 
 /**
- * Composable that displays the topBar and displays back button if back navigation is possible.
+Bu Composable, topBar'ı görüntüler ve geri navigasyon mümkünse geri düğmesini gösterir.
  */
 @Composable
 fun CupcakeAppBar(

@@ -1,18 +1,18 @@
 package com.example.cupcake.data
 
 /**
- * Data class that represents the current UI state in terms of [quantity], [flavor],
- * [dateOptions], selected pickup [date] and [price]
+ * [quantity], [flavor], [dateOptions], seçilen alım [date] ve [price] açısından
+ * mevcut UI durumunu temsil eden veri sınıfı.
  */
 data class OrderUiState(
-    /** Selected cupcake quantity (1, 6, 12) */
+    /** Seçilen cupcake miktarı (1, 6, 12) */
     val quantity: Int = 0,
-    /** Flavor of the cupcakes in the order (such as "Chocolate", "Vanilla", etc..) */
+    /** Siparişteki cupcake'lerin lezzeti (örneğin "Çikolata", "Vanilya", vs..) */
     val flavor: String = "",
-    /** Selected date for pickup (such as "Jan 1") */
+    /** Alım için seçilen tarih (örneğin "1 Ocak") */
     val date: String = "",
-    /** Total price for the order */
+    /** Siparişin toplam fiyatı */
     val price: String = "",
-    /** Available pickup dates for the order*/
+    /** Sipariş için mevcut alım tarihleri */
     val pickupOptions: List<String> = listOf()
 )
