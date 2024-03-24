@@ -1,5 +1,7 @@
 package com.example.cupcake
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,6 +32,23 @@ import com.example.cupcake.ui.OrderViewModel
 import com.example.cupcake.ui.SelectOptionScreen
 import com.example.cupcake.ui.StartOrderScreen
 
+/*
+Rotaların (route) ismi string olur. Biz bu enum'ı yapma sebebimiz
+//bu string değerleri oluşturmak.
+Cupcake uygulamasının dört rotasını tanımlayarak başlayacaksınız.
+
+Start: Üç düğmeden birinden kek miktarını seçin.
+Flavor: Seçenekler listesinden lezzeti seçin.
+Pickup: Seçenekler listesinden alım tarihini seçin.
+Summary: Seçimleri inceleyin ve siparişi gönderin veya iptal edin.
+ */
+enum class CupcakeScreen() {
+    Start,
+    Flavor,
+    Pickup,
+    Summary
+}
+
 /**
 Bu Composable, topBar'ı görüntüler ve geri navigasyon mümkünse geri düğmesini gösterir.
  */
@@ -56,23 +75,6 @@ fun CupcakeAppBar(
             }
         }
     )
-}
-
-/*
-Rotaların (route) ismi string olur. Biz bu enum'ı yapma sebebimiz
-//bu string değerleri oluşturmak.
-Cupcake uygulamasının dört rotasını tanımlayarak başlayacaksınız.
-
-Start: Üç düğmeden birinden kek miktarını seçin.
-Flavor: Seçenekler listesinden lezzeti seçin.
-Pickup: Seçenekler listesinden alım tarihini seçin.
-Summary: Seçimleri inceleyin ve siparişi gönderin veya iptal edin.
- */
-enum class CupcakeScreen() {
-    Start,
-    Flavor,
-    Pickup,
-    Summary
 }
 
 @Composable
@@ -156,6 +158,9 @@ fun CupcakeApp(
             }
 
             composable(route = CupcakeScreen.Summary.name) {
+                //içinde bulunduğumuz durumu(context)'i aldık
+                val context = LocalContext.current
+
                 OrderSummaryScreen(
                     orderUiState = uiState,
                     //Bu ekrandaki butonlara basıldığında olacak işlemleri yazacağız.
@@ -164,7 +169,7 @@ fun CupcakeApp(
                         cancelOrderAndNavigateToStart(viewModel, navController)
                     },
                     onSendButtonClicked = { subject: String, summary: String ->
-
+                        shareOrder(context, subject = subject, summary = summary)
                     },
                     modifier = Modifier.fillMaxHeight()
                 )
@@ -186,4 +191,32 @@ private fun cancelOrderAndNavigateToStart(
     viewModel.resetOrder()
     //
     navController.popBackStack(CupcakeScreen.Start.name, inclusive = false)
+}
+
+/*
+Top app bar daki paylaş işlemi ile siparişimizi paylaşma işlemi için kullanacağız.
+Bunu android sistemi kontrol eder. Navigation burada işlem yapmaz.
+
+Bir intent (amaç) nesnesi oluşturun ve ACTION_SEND gibi amacı belirtin.
+Bu intent (amaçla) gönderilen ek verilerin türünü belirtin. Basit bir metin parçası için
+"metin/düz" kullanabilirsiniz, ancak "resim" veya "video" gibi başka türler de mevcuttur.
+putExtra() yöntemini çağırarak, paylaşılacak metin veya resim gibi ek verileri amaca iletin.
+ Bu intent (niyet) iki ekstrayı alacaktır: EXTRA_SUBJECT ve EXTRA_TEXT.
+ intent (Amaçtan) oluşturulan bir etkinliği ileterek startActivity() bağlam yöntemini çağırın.
+ */
+//paylaşılacak değerleri giriyoruz
+private fun shareOrder(context: Context, subject: String, summary: String) {
+    //intent oluşturduk ve türünü text yani düz yazı verdik.
+    //Sonra fonksiyona argüman olarak gelen değerleri ilettik.
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, summary)
+    }
+    context.startActivity(
+        Intent.createChooser(
+            intent,
+            context.getString(R.string.new_cupcake_order)
+        )
+    )
 }

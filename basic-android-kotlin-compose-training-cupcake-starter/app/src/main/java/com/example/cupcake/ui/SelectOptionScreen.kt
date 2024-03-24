@@ -93,7 +93,7 @@ fun SelectOptionScreen(
             OutlinedButton(
                 modifier = Modifier.weight(1f),
                 //butona basuldığında cancel(iptal etme) işlemi gerçekleştirilicek
-                onClick = {onCancelButtonClicked}
+                onClick = onCancelButtonClicked
             ) {
                 Text(stringResource(R.string.cancel))
             }
@@ -103,7 +103,7 @@ fun SelectOptionScreen(
                 enabled = selectedValue.isNotEmpty(),
                 //butona basıldığında sonraki adıma geçiş yani sonraki
                 //composable'a geçiş işlemi gerçekleştirilecek.
-                onClick = {onNextButtonClicked}
+                onClick = onNextButtonClicked
             ) {
                 Text(stringResource(R.string.next))
             }
