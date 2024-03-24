@@ -88,6 +88,13 @@ fun CupcakeApp(
                 //composable'ını çağırıyoruz.
                 StartOrderScreen(
                     quantityOptions = DataSource.quantityOptions,
+                    //Başlangıç ekranında butona basıldığında view model'daki adet miktarnına
+                    //Mevcut adet miktarını veriyoruz. Nav controller'ada sonraki ekranın
+                    //route(rota) bilgisini veriyoruz.
+                    onNextButtonClicked = {
+                        viewModel.setQuantity(it)
+                        navController.navigate(CupcakeScreen.Flavor.name)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(dimensionResource(R.dimen.padding_medium))
@@ -103,7 +110,13 @@ fun CupcakeApp(
                  */
                 SelectOptionScreen(
                     subtotal = uiState.price,
+                    //Butona basıldığında bir sonraki ekranın rotasını verdik
+                    onNextButtonClicked = { navController.navigate(CupcakeScreen.Pickup.name) },
+                    //İptel etme butonuna basıldığında
+                    onCancelButtonClicked = {},
                     options = DataSource.flavors.map { id -> context.resources.getString(id) },
+                    //Başlangıç ekranında butona basıldığında view model'daki adet flavor(lezzet)
+                    //değişkenini view model'a veriyoruz.
                     onSelectionChanged = { viewModel.setFlavor(it) },
                     modifier = Modifier.fillMaxHeight()
                 )
@@ -112,6 +125,8 @@ fun CupcakeApp(
             composable(route = CupcakeScreen.Pickup.name) {
                 SelectOptionScreen(
                     subtotal = uiState.price,
+                    onNextButtonClicked = { navController.navigate(CupcakeScreen.Summary.name) },
+                    onCancelButtonClicked = {},
                     options = uiState.pickupOptions,
                     onSelectionChanged = { viewModel.setDate(it) },
                     modifier = Modifier.fillMaxHeight()
@@ -121,6 +136,12 @@ fun CupcakeApp(
             composable(route = CupcakeScreen.Summary.name) {
                 OrderSummaryScreen(
                     orderUiState = uiState,
+                    //Bu ekrandaki butonlara basıldığında olacak işlemleri yazacağız.
+                    //Burada yapılacak işlemleri sonradan ekleyeceğiz.
+                    onCancelButtonClicked = {},
+                    onSendButtonClicked = { subject: String, summary: String ->
+
+                    },
                     modifier = Modifier.fillMaxHeight()
                 )
             }
