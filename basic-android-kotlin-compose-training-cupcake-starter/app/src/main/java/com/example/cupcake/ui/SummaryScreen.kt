@@ -33,6 +33,11 @@ import com.example.cupcake.ui.theme.CupcakeTheme
 @Composable
 fun OrderSummaryScreen(
     orderUiState: OrderUiState,
+    //Geri tuşuna basıldığında yapılacak işlem için
+    onCancelButtonClicked: () -> Unit,
+    //Gönder butonuna basıldığında yapılacak işlem için oluşturduk.
+    //string değer gönderecek çünkü yazı gönderecek.
+    onSendButtonClicked: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val resources = LocalContext.current.resources
@@ -88,13 +93,16 @@ fun OrderSummaryScreen(
             ) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {}
+                    //butona basıldığında newOrder değerini ve
+                    // OrderSummary(sipariş özeti) değerini iletiyoruz
+                    onClick = {onSendButtonClicked(newOrder, orderSummary)}
                 ) {
                     Text(stringResource(R.string.send))
                 }
                 OutlinedButton(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {}
+                    // bu butona basıldığına işlemi iptal ediyoruz.
+                    onClick = {onCancelButtonClicked}
                 ) {
                     Text(stringResource(R.string.cancel))
                 }
@@ -109,6 +117,10 @@ fun OrderSummaryPreview() {
     CupcakeTheme {
         OrderSummaryScreen(
             orderUiState = OrderUiState(0, "Test", "Test", "$300.00"),
+            //Gönder butonuna basıldığında değer gönderiyoruz.
+            onSendButtonClicked = { subject: String, summary: String -> },
+            //Geri butonu tetkilendiğinde yapılacak işlem.
+            onCancelButtonClicked = {},
             modifier = Modifier.fillMaxHeight()
         )
     }
