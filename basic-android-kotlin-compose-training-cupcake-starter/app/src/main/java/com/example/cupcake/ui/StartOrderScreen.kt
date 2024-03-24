@@ -33,7 +33,13 @@ import com.example.cupcake.ui.theme.CupcakeTheme
  */
 @Composable
 fun StartOrderScreen(
+    //Keklerin hangi sayıda sipraiş verileceğini tutar.
+    //ilk int her kek sayısının int olacağını belirltir
+    //ikinci int ise sayıyı tutar
     quantityOptions: List<Pair<Int, Int>>,
+    //Butona tıkladığımızda diğer diğer ekrana geçecek
+    //Farklı sayıda kek girişi olabileceği için o sayıyı alıp ileteceğiz
+    onNextButtonClicked: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -68,7 +74,9 @@ fun StartOrderScreen(
             quantityOptions.forEach { item ->
                 SelectQuantityButton(
                     labelResourceId = item.first,
-                    onClick = {}
+                    //butona basıldığında ikinci değeri alıyoruz.
+                    //burada keklerin sayısını temsil ediyordu.
+                    onClick = {onNextButtonClicked(item.second)}
                 )
             }
         }
@@ -99,6 +107,7 @@ fun StartOrderPreview() {
     CupcakeTheme {
         StartOrderScreen(
             quantityOptions = DataSource.quantityOptions,
+            onNextButtonClicked = {},
             modifier = Modifier
                 .fillMaxSize()
                 .padding(dimensionResource(R.dimen.padding_medium))

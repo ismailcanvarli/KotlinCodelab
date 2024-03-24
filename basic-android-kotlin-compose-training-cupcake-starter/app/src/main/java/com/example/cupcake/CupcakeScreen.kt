@@ -130,8 +130,6 @@ fun CupcakeApp(
     }
 }
 
-
-
 /*
 Rotaların (route) ismi string olur. Biz bu enum'ı yapma sebebimiz
 //bu string değerleri oluşturmak.
