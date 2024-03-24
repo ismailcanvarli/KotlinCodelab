@@ -58,6 +58,23 @@ fun CupcakeAppBar(
     )
 }
 
+/*
+Rotaların (route) ismi string olur. Biz bu enum'ı yapma sebebimiz
+//bu string değerleri oluşturmak.
+Cupcake uygulamasının dört rotasını tanımlayarak başlayacaksınız.
+
+Start: Üç düğmeden birinden kek miktarını seçin.
+Flavor: Seçenekler listesinden lezzeti seçin.
+Pickup: Seçenekler listesinden alım tarihini seçin.
+Summary: Seçimleri inceleyin ve siparişi gönderin veya iptal edin.
+ */
+enum class CupcakeScreen() {
+    Start,
+    Flavor,
+    Pickup,
+    Summary
+}
+
 @Composable
 fun CupcakeApp(
     viewModel: OrderViewModel = viewModel(),
@@ -112,8 +129,11 @@ fun CupcakeApp(
                     subtotal = uiState.price,
                     //Butona basıldığında bir sonraki ekranın rotasını verdik
                     onNextButtonClicked = { navController.navigate(CupcakeScreen.Pickup.name) },
-                    //İptel etme butonuna basıldığında
-                    onCancelButtonClicked = {},
+                    //Back (İptel etme) butonuna basıldığında aşağıdaki fonk. çağırıyoruz.
+                    // O fonksiyonda işlemleri sıfırlıyor.
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(viewModel, navController)
+                    },
                     options = DataSource.flavors.map { id -> context.resources.getString(id) },
                     //Başlangıç ekranında butona basıldığında view model'daki adet flavor(lezzet)
                     //değişkenini view model'a veriyoruz.
@@ -126,7 +146,9 @@ fun CupcakeApp(
                 SelectOptionScreen(
                     subtotal = uiState.price,
                     onNextButtonClicked = { navController.navigate(CupcakeScreen.Summary.name) },
-                    onCancelButtonClicked = {},
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(viewModel, navController)
+                    },
                     options = uiState.pickupOptions,
                     onSelectionChanged = { viewModel.setDate(it) },
                     modifier = Modifier.fillMaxHeight()
@@ -138,7 +160,9 @@ fun CupcakeApp(
                     orderUiState = uiState,
                     //Bu ekrandaki butonlara basıldığında olacak işlemleri yazacağız.
                     //Burada yapılacak işlemleri sonradan ekleyeceğiz.
-                    onCancelButtonClicked = {},
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(viewModel, navController)
+                    },
                     onSendButtonClicked = { subject: String, summary: String ->
 
                     },
@@ -151,19 +175,15 @@ fun CupcakeApp(
     }
 }
 
-/*
-Rotaların (route) ismi string olur. Biz bu enum'ı yapma sebebimiz
-//bu string değerleri oluşturmak.
-Cupcake uygulamasının dört rotasını tanımlayarak başlayacaksınız.
-
-Start: Üç düğmeden birinden kek miktarını seçin.
-Flavor: Seçenekler listesinden lezzeti seçin.
-Pickup: Seçenekler listesinden alım tarihini seçin.
-Summary: Seçimleri inceleyin ve siparişi gönderin veya iptal edin.
- */
-enum class CupcakeScreen() {
-    Start,
-    Flavor,
-    Pickup,
-    Summary
+//Bu fonksiyonu telefondaki back tuşuna bastığımızda olacak işlem için tanımlıyoruz.
+//2 adet parametre tanımlayacağız ve amaç şu olacak. Geri gelme tuşuna bastığımızda
+//uygulama hangi ekrana dönsün.
+private fun cancelOrderAndNavigateToStart(
+    viewModel: OrderViewModel,
+    navController: NavHostController
+) {
+    //En başa geldiğimiz için siparişi sıfırlıyoruz.
+    viewModel.resetOrder()
+    //
+    navController.popBackStack(CupcakeScreen.Start.name, inclusive = false)
 }
