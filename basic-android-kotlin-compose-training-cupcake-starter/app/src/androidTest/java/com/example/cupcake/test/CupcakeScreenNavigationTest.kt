@@ -29,94 +29,93 @@ Cupcake uygulamamızda ekranlar arası navigasyonun testi için bu sınıfı olu
 Bu testleri yapabilmek için build gradle (module app) dosyasına gerekli
 dependencies'leri ekledik.
  */
-class CupcakeScreenNavigationTest
-
-//Bir fonksiyona before eklendiğinde her @test notasyonu bulunan test edilecek
+class CupcakeScreenNavigationTest{
+    //Bir fonksiyona before eklendiğinde her @test notasyonu bulunan test edilecek
 //kısımdan önce bu kısım çağırılır.
-@Before
-fun setupCupcakeNavHost() {
-    composeTestRule.setContent {
-        navController = TestNavHostController(LocalContext.current).apply {
-            navigatorProvider.addNavigator(ComposeNavigator())
+    @Before
+    fun setupCupcakeNavHost() {
+        composeTestRule.setContent {
+            navController = TestNavHostController(LocalContext.current).apply {
+                navigatorProvider.addNavigator(ComposeNavigator())
+            }
+            CupcakeApp(navController = navController)
         }
-        CupcakeApp(navController = navController)
+    }
+
+    //Başlangıç noktasının startOrderScreen olduğunu doğrulamak için test yazacağız
+    @Test
+    fun cupcakeNavHost_verifyStartDestination() {
+        //buradaki iddiayı sürekli kullanacağımız için ScreenAssertions isimli bir
+        //kotlin file oluşturduk. Oradan çağırdık bu assestions'ı.
+        navController.assertCurrentRouteName(CupcakeScreen.Start.name)
+    }
+
+    //Başlangıçta top bar'da geri gelme butonu olmadığını kontrol edeceğiz.
+    @Test
+    fun cupcakeNavHost_verifyBackNavigationNotShownOnStartOrderScreen() {
+        val backText = composeTestRule.activity.getString(R.string.back_button)
+        composeTestRule.onNodeWithContentDescription(backText).assertDoesNotExist()
+    }
+
+    //
+    @Test
+    fun cupcakeNavHost_clickOneCupcake_navigatesToSelectFlavorScreen() {
+        composeTestRule.onNodeWithStringId(R.string.one_cupcake).performClick()
+        navController.assertCurrentRouteName(CupcakeScreen.Flavor.name)
+    }
+
+    //flovar ekranından Yukarı butonuna tıklayarak Başlangıç ekranına gitme
+    @Test
+    fun cupcakeNavHost_clickNextOnFlavorScreen_navigatesToPickupScreen() {
+
+        navigateToFlavorScreen ()
+        composeTestRule.onNodeWithStringId(R.string.next).performClick()
+        navController.assertCurrentRouteName(CupcakeScreen.Pickup.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickBackOnFlavorScreen_navigatesToStartOrderScreen() {
+        navigateToFlavorScreen()
+        performNavigateUp()
+        navController.assertCurrentRouteName(CupcakeScreen.Start.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickCancelOnFlavorScreen_navigatesToStartOrderScreen() {
+        navigateToFlavorScreen()
+        composeTestRule.onNodeWithStringId(R.string.cancel).performClick()
+        navController.assertCurrentRouteName(CupcakeScreen.Start.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickNextOnPickupScreen_navigatesToSummaryScreen() {
+        navigateToPickupScreen()
+        composeTestRule.onNodeWithText(getFormattedDate()).performClick()
+        composeTestRule.onNodeWithStringId(R.string.next).performClick()
+        navController.assertCurrentRouteName(CupcakeScreen.Summary.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickBackOnPickupScreen_navigatesToFlavorScreen() {
+        navigateToPickupScreen()
+        performNavigateUp()
+        navController.assertCurrentRouteName(CupcakeScreen.Flavor.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickCancelOnPickupScreen_navigatesToStartOrderScreen() {
+        navigateToPickupScreen()
+        composeTestRule.onNodeWithStringId(R.string.cancel).performClick()
+        navController.assertCurrentRouteName(CupcakeScreen.Start.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickCancelOnSummaryScreen_navigatesToStartOrderScreen() {
+        navigateToSummaryScreen()
+        composeTestRule.onNodeWithStringId(R.string.cancel).performClick()
+        navController.assertCurrentRouteName(CupcakeScreen.Start.name)
     }
 }
-
-//Başlangıç noktasının startOrderScreen olduğunu doğrulamak için test yazacağız
-@Test
-fun cupcakeNavHost_verifyStartDestination() {
-    //buradaki iddiayı sürekli kullanacağımız için ScreenAssertions isimli bir
-    //kotlin file oluşturduk. Oradan çağırdık bu assestions'ı.
-    navController.assertCurrentRouteName(CupcakeScreen.Start.name)
-}
-
-//Başlangıçta top bar'da geri gelme butonu olmadığını kontrol edeceğiz.
-@Test
-fun cupcakeNavHost_verifyBackNavigationNotShownOnStartOrderScreen() {
-    val backText = composeTestRule.activity.getString(R.string.back_button)
-    composeTestRule.onNodeWithContentDescription(backText).assertDoesNotExist()
-}
-
-//
-@Test
-fun cupcakeNavHost_clickOneCupcake_navigatesToSelectFlavorScreen() {
-    composeTestRule.onNodeWithStringId(R.string.one_cupcake).performClick()
-    navController.assertCurrentRouteName(CupcakeScreen.Flavor.name)
-}
-
-//flovar ekranından Yukarı butonuna tıklayarak Başlangıç ekranına gitme
-@Test
-fun cupcakeNavHost_clickNextOnFlavorScreen_navigatesToPickupScreen() {
-
-    navigateToFlavorScreen ()
-    composeTestRule.onNodeWithStringId(R.string.next).performClick()
-    navController.assertCurrentRouteName(CupcakeScreen.Pickup.name)
-}
-
-@Test
-fun cupcakeNavHost_clickBackOnFlavorScreen_navigatesToStartOrderScreen() {
-    navigateToFlavorScreen()
-    performNavigateUp()
-    navController.assertCurrentRouteName(CupcakeScreen.Start.name)
-}
-
-@Test
-fun cupcakeNavHost_clickCancelOnFlavorScreen_navigatesToStartOrderScreen() {
-    navigateToFlavorScreen()
-    composeTestRule.onNodeWithStringId(R.string.cancel).performClick()
-    navController.assertCurrentRouteName(CupcakeScreen.Start.name)
-}
-
-@Test
-fun cupcakeNavHost_clickNextOnPickupScreen_navigatesToSummaryScreen() {
-    navigateToPickupScreen()
-    composeTestRule.onNodeWithText(getFormattedDate()).performClick()
-    composeTestRule.onNodeWithStringId(R.string.next).performClick()
-    navController.assertCurrentRouteName(CupcakeScreen.Summary.name)
-}
-
-@Test
-fun cupcakeNavHost_clickBackOnPickupScreen_navigatesToFlavorScreen() {
-    navigateToPickupScreen()
-    performNavigateUp()
-    navController.assertCurrentRouteName(CupcakeScreen.Flavor.name)
-}
-
-@Test
-fun cupcakeNavHost_clickCancelOnPickupScreen_navigatesToStartOrderScreen() {
-    navigateToPickupScreen()
-    composeTestRule.onNodeWithStringId(R.string.cancel).performClick()
-    navController.assertCurrentRouteName(CupcakeScreen.Start.name)
-}
-
-@Test
-fun cupcakeNavHost_clickCancelOnSummaryScreen_navigatesToStartOrderScreen() {
-    navigateToSummaryScreen()
-    composeTestRule.onNodeWithStringId(R.string.cancel).performClick()
-    navController.assertCurrentRouteName(CupcakeScreen.Start.name)
-}
-
 
 private fun navigateToFlavorScreen() {
     composeTestRule.onNodeWithStringId(R.string.one_cupcake).performClick()
