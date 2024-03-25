@@ -41,7 +41,9 @@ fun setupCupcakeNavHost() {
 //Başlangıç noktasının startOrderScreen olduğunu doğrulamak için test yazacağız
 @Test
 fun cupcakeNavHost_verifyStartDestination() {
-    assertEquals(CupcakeScreen.Start.name, navController.currentBackStackEntry?.destination?.route)
+    //buradaki iddiayı sürekli kullanacağımız için ScreenAssertions isimli bir
+    //kotlin file oluşturduk. Oradan çağırdık bu assestions'ı.
+    navController.assertCurrentRouteName(CupcakeScreen.Start.name)
 
 
 }
