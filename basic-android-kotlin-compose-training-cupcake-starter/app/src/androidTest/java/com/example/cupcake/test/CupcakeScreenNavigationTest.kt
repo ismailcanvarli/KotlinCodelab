@@ -3,10 +3,14 @@ package com.example.cupcake.test
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import com.example.cupcake.CupcakeApp
+import com.example.cupcake.CupcakeScreen
+import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 
 //Uygulama açıldığında direk test navigation controller oluşturuyoruz.
 private lateinit var navController: TestNavHostController
@@ -32,4 +36,12 @@ fun setupCupcakeNavHost() {
         }
         CupcakeApp(navController = navController)
     }
+}
+
+//Başlangıç noktasının startOrderScreen olduğunu doğrulamak için test yazacağız
+@Test
+fun cupcakeNavHost_verifyStartDestination() {
+    assertEquals(CupcakeScreen.Start.name, navController.currentBackStackEntry?.destination?.route)
+
+
 }
