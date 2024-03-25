@@ -1,7 +1,7 @@
 package com.example.cupcake.data
 
 /**
- * [quantity], [flavor], [dateOptions], seçilen alım [date] ve [price] açısından
+ * [quantity], [flavor], [date], [price] ve [pickupOptions] açısından
  * mevcut UI durumunu temsil eden veri sınıfı.
  */
 data class OrderUiState(

@@ -52,38 +52,6 @@ enum class CupcakeScreen(@StringRes val title: Int) {
     Summary(title = R.string.order_summary)
 }
 
-/**
-Bu Composable, topBar'ı görüntüler ve geri navigasyon mümkünse geri düğmesini gösterir.
- Mevcut ekran isminde bir argüman ekledik çünkü geri tuşu hep aynı yerde olacak
- mevcut ekranı bilecek ve basıldığında önceki ekrana dönecek.
- */
-@Composable
-fun CupcakeAppBar(
-    currentScreen: CupcakeScreen,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    //top app bar'ın ismi mevcut ekranın ismi olacak.
-    TopAppBar(
-        title = { Text(stringResource(currentScreen.title)) },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
-                    )
-                }
-            }
-        }
-    )
-}
-
 @Composable
 fun CupcakeApp(
     viewModel: OrderViewModel = viewModel(),
@@ -92,6 +60,8 @@ fun CupcakeApp(
     //Top app bar'daki geri tuşu için uygulamada önceki sayfa varmı bakacağız
     //eğer ilk ekranda ise geri tuşumuz gözükmeyecek.
     val backStackEntry by navController.currentBackStackEntryAsState()
+    //mevcut ekranın değerini güvenli bir şekilde belirlemek ve
+    // onu currentScreen değişkenine atamaktır.
     val currentScreen = CupcakeScreen.valueOf(
         backStackEntry?.destination?.route ?: CupcakeScreen.Start.name
     )
@@ -126,7 +96,7 @@ fun CupcakeApp(
                 //composable'ını çağırıyoruz.
                 StartOrderScreen(
                     quantityOptions = DataSource.quantityOptions,
-                    //Başlangıç ekranında butona basıldığında view model'daki adet miktarnına
+                    //Başlangıç ekranında butona basıldığında view model'daki adet miktarına
                     //Mevcut adet miktarını veriyoruz. Nav controller'ada sonraki ekranın
                     //route(rota) bilgisini veriyoruz.
                     onNextButtonClicked = {
@@ -197,6 +167,38 @@ fun CupcakeApp(
         }
 
     }
+}
+
+/**
+Bu Composable, topBar'ı görüntüler ve geri navigasyon mümkünse geri düğmesini gösterir.
+ Mevcut ekran isminde bir argüman ekledik çünkü geri tuşu hep aynı yerde olacak
+ mevcut ekranı bilecek ve basıldığında önceki ekrana dönecek.
+ */
+@Composable
+fun CupcakeAppBar(
+    currentScreen: CupcakeScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        //top app bar'ın ismi mevcut ekranın ismi olacak.
+        title = { Text(stringResource(currentScreen.title)) },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back_button)
+                    )
+                }
+            }
+        }
+    )
 }
 
 //Bu fonksiyonu telefondaki back tuşuna bastığımızda olacak işlem için tanımlıyoruz.

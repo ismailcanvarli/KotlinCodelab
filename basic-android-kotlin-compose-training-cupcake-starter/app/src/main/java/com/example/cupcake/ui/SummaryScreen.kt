@@ -34,7 +34,7 @@ import com.example.cupcake.ui.theme.CupcakeTheme
 fun OrderSummaryScreen(
     orderUiState: OrderUiState,
     //Geri tuşuna basıldığında yapılacak işlem için
-    onCancelButtonClicked: () -> Unit,
+    onCancelButtonClicked: () -> Unit = {},
     //Gönder butonuna basıldığında yapılacak işlem için oluşturduk.
     //string değer gönderecek çünkü yazı gönderecek.
     onSendButtonClicked: (String, String) -> Unit,

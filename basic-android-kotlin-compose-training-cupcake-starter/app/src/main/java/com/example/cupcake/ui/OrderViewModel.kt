@@ -45,6 +45,7 @@ class OrderViewModel : ViewModel() {
      * Tüm sipariş için yalnızca 1 lezzet seçilebilir.
      */
     fun setFlavor(desiredFlavor: String) {
+        //_uiState'in flavor özelliğini desiredFlavor ile güncellemektir.
         _uiState.update { currentState ->
             currentState.copy(flavor = desiredFlavor)
         }
