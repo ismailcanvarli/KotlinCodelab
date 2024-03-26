@@ -7,6 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.lunchtray.ui.OrderViewModel
 
 // TODO: Screen enum
@@ -23,8 +26,19 @@ enum class CupcakeScreen(@StringRes val title: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LunchTrayApp() {
+fun LunchTrayApp(
+    viewModel: OrderViewModel = viewModel(),
+    navController: NavHostController = rememberNavController()
+) {
     // TODO: Create Controller and initialization
+    //Top app bar'daki geri tuşu için uygulamada önceki sayfa varmı bakacağız
+    //eğer ilk ekranda ise geri tuşumuz gözükmeyecek.
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    //mevcut ekranın değerini güvenli bir şekilde belirlemek ve
+    // onu currentScreen değişkenine atamaktır.
+    val currentScreen = CupcakeScreen.valueOf(
+        backStackEntry?.destination?.route ?: CupcakeScreen.Start.name
+    )
 
     // Create ViewModel
     val viewModel: OrderViewModel = viewModel()
