@@ -17,19 +17,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.lunchtray.datasource.DataSource
+import com.example.lunchtray.ui.AccompanimentMenuScreen
+import com.example.lunchtray.ui.CheckoutScreen
 import com.example.lunchtray.ui.EntreeMenuScreen
 import com.example.lunchtray.ui.OrderViewModel
+import com.example.lunchtray.ui.SideDishMenuScreen
 import com.example.lunchtray.ui.StartOrderScreen
 
-// TODO: Screen enum
 //Buradaki güncelleme işlemi yapıldı. top bar da gözükecek.
 enum class LunchTrayScreen(@StringRes val title: Int) {
     Start(title = R.string.app_name),
@@ -39,9 +41,6 @@ enum class LunchTrayScreen(@StringRes val title: Int) {
     Checkout(title = R.string.order_checkout)
 }
 
-// TODO: AppBar
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LunchTrayApp() {
     //Nav kontroller oluşturduk.
@@ -104,19 +103,69 @@ fun LunchTrayApp() {
                 )
             }
 
+            composable(route = LunchTrayScreen.SideDishMenu.name) {
+                SideDishMenuScreen(
+                    options = DataSource.sideDishMenuItems,
+                    onCancelButtonClicked = {
+                        viewModel.resetOrder()
+                        navController.popBackStack(LunchTrayScreen.Start.name, inclusive = false)
+                    },
+                    onNextButtonClicked = {
+                        navController.navigate(LunchTrayScreen.AccompanimentMenu.name)
+                    },
+                    onSelectionChanged = { item ->
+                        viewModel.updateSideDish(item)
+                    },
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(innerPadding)
+                )
+            }
+
+            composable(route = LunchTrayScreen.AccompanimentMenu.name) {
+                AccompanimentMenuScreen(
+                    options = DataSource.accompanimentMenuItems,
+                    onCancelButtonClicked = {
+                        viewModel.resetOrder()
+                        navController.popBackStack(LunchTrayScreen.Start.name, inclusive = false)
+                    },
+                    onNextButtonClicked = {
+                        navController.navigate(LunchTrayScreen.Checkout.name)
+                    },
+                    onSelectionChanged = { item ->
+                        viewModel.updateAccompaniment(item)
+                    },
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(innerPadding)
+                )
+            }
+
+            composable(route = LunchTrayScreen.Checkout.name) {
+                CheckoutScreen(
+                    orderUiState = uiState,
+                    onCancelButtonClicked = {
+                        viewModel.resetOrder()
+                        navController.popBackStack(LunchTrayScreen.Start.name, inclusive = false)
+                    },
+                    onNextButtonClicked = {
+                        viewModel.resetOrder()
+                        navController.popBackStack(LunchTrayScreen.Start.name, inclusive = false)
+                    },
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(
+                            top = innerPadding.calculateTopPadding(),
+                            bottom = innerPadding.calculateBottomPadding(),
+                            start = dimensionResource(R.dimen.padding_medium),
+                            end = dimensionResource(R.dimen.padding_medium),
+                        )
+                )
+            }
         }
 
     }
 }
-
-/*
-The Start Order button on the Start screen navigates to the Entree menu screen.
-The Next button on the Entree menu screen navigates to the Side dish menu screen.
-The Next button on the Side dish menu screen navigates to the Accompaniment menu screen.
-The Next button on the Accompaniment menu screen navigates to the Checkout screen.
-The Submit button on the Checkout screen navigates to the Start screen.
-The Cancel button on any screen navigates back to the Start screen.
- */
 
 /**
 Bu Composable, topBar'ı görüntüler ve geri navigasyon mümkünse geri düğmesini gösterir.
@@ -145,16 +194,4 @@ fun LunchTrayAppBar(
                 }
             }
         })
-}
-
-//Bu fonksiyonu telefondaki back tuşuna bastığımızda olacak işlem için tanımlıyoruz.
-//2 adet parametre tanımlayacağız ve amaç şu olacak. Geri gelme tuşuna bastığımızda
-//uygulama hangi ekrana dönsün.
-private fun cancelOrderAndNavigateToStart(
-    viewModel: OrderViewModel, navController: NavHostController
-) {
-    //En başa geldiğimiz için siparişi sıfırlıyoruz.
-    viewModel.resetOrder()
-    //
-    navController.popBackStack(LunchTrayScreen.Start.name, inclusive = false)
 }
