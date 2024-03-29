@@ -1,9 +1,11 @@
 package com.example.racetracker.ui
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.delay
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Bu sınıf, yarış katılımcısı için state holder temsil eder.
@@ -29,11 +31,16 @@ class RaceParticipant(
     //Koşma işlevini simüle edecek. Totalde 100 kere tekrar edecek.
     //Kullanıcının hızına göre farklı ilerleme kat edmiş olacak kullanıcılar.
     suspend fun run() {
-        while (currentProgress < maxProgress) {
-            //Suspension point(askıya alma noktası): ekranın sol tarafında bunun simge fonksiyonun
-            // askıya alınabileceği ve daha sonra tekrar devam edebileceği askıya alma noktasını gösterir.
-            delay(progressDelayMillis)
-            currentProgress += progressIncrement
+        try {
+            while (currentProgress < maxProgress) {
+                //Suspension point(askıya alma noktası): ekranın sol tarafında bunun simge fonksiyonun
+                // askıya alınabileceği ve daha sonra tekrar devam edebileceği askıya alma noktasını gösterir.
+                delay(progressDelayMillis)
+                currentProgress += progressIncrement
+            }
+        } catch (e: CancellationException) {
+            Log.e("RaceParticipant", "$name: ${e.message}")
+            throw e // Always re-throw CancellationException.
         }
     }
 

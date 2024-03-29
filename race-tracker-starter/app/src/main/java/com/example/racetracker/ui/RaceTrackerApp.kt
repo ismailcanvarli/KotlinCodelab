@@ -37,6 +37,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.racetracker.R
 import com.example.racetracker.ui.theme.RaceTrackerTheme
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun RaceTrackerApp() {
@@ -58,11 +60,14 @@ fun RaceTrackerApp() {
         //Bu bir corotine scpoe olarak kullanıyoruz. Coroutinleri bununla
         //çağırıp başlatma ve durduma işlemini yapacağız.
         LaunchedEffect(playerOne, playerTwo) {
-            //Her iki kullanıcıyıda koşturuyoruz.
-            playerOne.run()
-            playerTwo.run()
+            //Her iki eşyordamın bitmesini bekliyor. bittikten sonra diğer starıa geçiyor.
+            coroutineScope {
+                //Her iki kullanıcıyıda koşturuyoruz.
+                launch { playerOne.run() }
+                launch { playerTwo.run() }
+            }
             //yarış bittiğinde yada durdurulduğunda bu değer false olur.
-            raceInProgress = false
+            raceInProgress = false // Bu, oyuncuların run() yürütmesini bitirmesini beklemeden durumu hemen güncelleyecektir.
         }
     }
 
