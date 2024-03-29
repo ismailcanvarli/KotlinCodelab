@@ -40,9 +40,9 @@ import com.example.racetracker.ui.theme.RaceTrackerTheme
 @Composable
 fun RaceTrackerApp() {
     /**
-     * Note: To survive the configuration changes such as screen rotation, [rememberSaveable] should
-     * be used with custom Saver object. But to keep the example simple, and keep focus on
-     * Coroutines that implementation detail is stripped out.
+    Not: Ekran döndürme gibi yapılandırma değişikliklerinden etkilenmemek için,
+    özel Saver nesnesiyle [rememberSaveable] kullanılmalıdır.
+    Ancak örneği basit tutmak ve * Coroutines'e odaklanmak için uygulama ayrıntıları çıkarılmıştır.
      */
     val playerOne = remember {
         RaceParticipant(name = "Player 1", progressIncrement = 1)

@@ -3,9 +3,10 @@ package com.example.racetracker.ui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 
 /**
- * This class represents a state holder for race participant.
+ * Bu sınıf, yarış katılımcısı için state holder temsil eder.
  */
 class RaceParticipant(
     val name: String,
@@ -20,14 +21,25 @@ class RaceParticipant(
     }
 
     /**
-     * Indicates the race participant's current progress
+     * Katılımcının mevcut ilerlemesini temsil eder.
      */
     var currentProgress by mutableStateOf(initialProgress)
         private set
 
+    //Koşma işlevini simüle edecek. Totalde 100 kere tekrar edecek.
+    //Kullanıcının hızına göre farklı ilerleme kat edmiş olacak kullanıcılar.
+    suspend fun run() {
+        while (currentProgress < maxProgress) {
+            //Suspension point(askıya alma noktası): ekranın sol tarafında bunun simge fonksiyonun
+            // askıya alınabileceği ve daha sonra tekrar devam edebileceği askıya alma noktasını gösterir.
+            delay(progressDelayMillis)
+            currentProgress += progressIncrement
+        }
+    }
+
     /**
-     * Regardless of the value of [initialProgress] the reset function will reset the
-     * [currentProgress] to 0
+     * [initialProgress] değerinden bağımsız olarak sıfırlama işlevi,
+     * [currentProgress] değerini 0'a sıfırlayacaktır.
      */
     fun reset() {
         currentProgress = 0
@@ -35,8 +47,8 @@ class RaceParticipant(
 }
 
 /**
- * The Linear progress indicator expects progress value in the range of 0-1. This property
- * calculate the progress factor to satisfy the indicator requirements.
+ * Doğrusal ilerleme göstergesi 0-1 aralığında ilerleme değeri bekler.
+ * Bu özellik gösterge gereksinimlerini karşılamak için ilerleme faktörünü hesaplar.
  */
 val RaceParticipant.progressFactor: Float
     get() = currentProgress / maxProgress.toFloat()
