@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +52,19 @@ fun RaceTrackerApp() {
         RaceParticipant(name = "Player 2", progressIncrement = 2)
     }
     var raceInProgress by remember { mutableStateOf(false) }
+
+    //Eğer yarış başlatılırsa race in progress true olur.
+    if (raceInProgress){
+        //Bu bir corotine scpoe olarak kullanıyoruz. Coroutinleri bununla
+        //çağırıp başlatma ve durduma işlemini yapacağız.
+        LaunchedEffect(playerOne, playerTwo) {
+            //Her iki kullanıcıyıda koşturuyoruz.
+            playerOne.run()
+            playerTwo.run()
+            //yarış bittiğinde yada durdurulduğunda bu değer false olur.
+            raceInProgress = false
+        }
+    }
 
     RaceTrackerScreen(
         playerOne = playerOne,
