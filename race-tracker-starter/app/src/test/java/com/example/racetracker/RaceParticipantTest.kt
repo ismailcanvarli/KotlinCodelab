@@ -16,6 +16,12 @@
 package com.example.racetracker
 
 import com.example.racetracker.ui.RaceParticipant
+import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
 
 class RaceParticipantTest {
     private val raceParticipant = RaceParticipant(
@@ -25,4 +31,29 @@ class RaceParticipantTest {
         initialProgress = 0,
         progressIncrement = 1
     )
+
+    //Yarış başladıktan sonra ilerlemenenin doğru şekilde olup olmadığını kontrol edeceğiz.
+    @Test
+    fun raceParticipant_RaceStarted_ProgressUpdated() = runTest {
+        val expectedProgress = 1
+        //Yarışın başlangıcını simüle edeceğiz.
+        launch { raceParticipant.run() }
+        //Test yürütme süresinin kısaltılmasına yardımcı olur. Testi hızlandırıyor.
+        advanceTimeBy(raceParticipant.progressDelayMillis)
+        runCurrent()
+        //ilerlemeden emin olmak için beklenen değerle yarıştaki değerin aynı olduğuna bakıyoruz.
+        assertEquals(expectedProgress, raceParticipant.currentProgress)
+    }
+
+    //Yarışın bitişini kontrol edeceğiz.
+    @Test
+    fun raceParticipant_RaceFinished_ProgressUpdated() = runTest {
+        launch { raceParticipant.run() }
+        advanceTimeBy(raceParticipant.maxProgress * raceParticipant.progressDelayMillis)
+        runCurrent()
+        //sonuç 100 mü ona baktık.
+        assertEquals(100, raceParticipant.currentProgress)
+    }
+
+    // TODO Add the tests to cover the happy path, error cases, and boundary cases.  Write unit tests for ViewModel codelab
 }
