@@ -1,23 +1,10 @@
-/*
- * Copyright (C) 2023 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.example.racetracker
 
 import com.example.racetracker.ui.RaceParticipant
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -55,5 +42,38 @@ class RaceParticipantTest {
         assertEquals(100, raceParticipant.currentProgress)
     }
 
-    // TODO Add the tests to cover the happy path, error cases, and boundary cases.  Write unit tests for ViewModel codelab
+    //Yarışın sıfırlanmasını kontrol edeceğiz.
+    @Test
+    fun raceParticipant_BoundaryParameters_RaceCompleted() = runBlocking {
+        val raceParticipant = RaceParticipant(
+            name = "Test",
+            maxProgress = 1, // Sınır parametresi
+            progressDelayMillis = 500L,
+            initialProgress = 0,
+            progressIncrement = 1
+        )
+        // Yarışı başlatın
+        val job = launch { raceParticipant.run() }
+
+        // Yarışın bitmesini bekleyin
+        delay(raceParticipant.progressDelayMillis * raceParticipant.maxProgress)
+        job.join()
+
+        // Yarışın tamamlandığını doğrulayın
+        assertEquals(raceParticipant.maxProgress, raceParticipant.currentProgress)
+    }
+
+    //İlerleme artışı sıfır olamaz
+    @Test(expected = IllegalArgumentException::class)
+    fun raceParticipant_ProgressIncrementZero_ExceptionThrown() = runTest {
+        // İlerleme artışı sıfır olamaz
+        RaceParticipant(name = "Progress Test", progressIncrement = 0)
+    }
+
+    //Maksimum ilerleme sıfır olamaz
+    @Test(expected = IllegalArgumentException::class)
+    fun raceParticipant_MaxProgressZero_ExceptionThrown() {
+        // Maksimum ilerleme sıfır olamaz
+        RaceParticipant(name = "Progress Test", maxProgress = 0)
+    }
 }
