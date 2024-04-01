@@ -5,23 +5,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
+/**
+ * MarsViewModel, Mars API'yi çağıran ve sonuçları saklayan ViewModel'dir.
+ */
 class MarsViewModel : ViewModel() {
-    /** The mutable State that stores the status of the most recent request */
+    /** En son isteğin durumunu saklayan Composable state */
     var marsUiState: String by mutableStateOf("")
         private set
 
     /**
-     * Call getMarsPhotos() on init so we can display status immediately.
+     * state hemen gösterebilmemiz için init üzerinde getMarsPhotos() çağırılır.
      */
     init {
         getMarsPhotos()
     }
 
     /**
-     * Gets Mars photos information from the Mars API Retrofit service and updates the
-     * [MarsPhoto] [List] [MutableList].
+     * Mars API Retrofit servisinden Mars fotoğrafları bilgisini alır ve
+     * [MarsPhoto] [List] [MutableList]'i günceller.
      */
     fun getMarsPhotos() {
-        marsUiState = "Set the Mars API status response here!"
+        marsUiState = "Mars API durum yanıtını buraya ayarla!"
     }
 }

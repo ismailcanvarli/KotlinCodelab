@@ -13,6 +13,9 @@ import androidx.compose.ui.unit.dp
 import com.example.marsphotos.R
 import com.example.marsphotos.ui.theme.MarsPhotosTheme
 
+/**
+ * HomeScreen, Mars API'den alınan fotoğrafların sayısını gösterir.
+ */
 @Composable
 fun HomeScreen(
     marsUiState: String,
@@ -23,7 +26,7 @@ fun HomeScreen(
 }
 
 /**
- * ResultScreen displaying number of photos retrieved.
+ * ResultScreen, alınan fotoğrafların sayısını gösterir.
  */
 @Composable
 fun ResultScreen(photos: String, modifier: Modifier = Modifier) {
