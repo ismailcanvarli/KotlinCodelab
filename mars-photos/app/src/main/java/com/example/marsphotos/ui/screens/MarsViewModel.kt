@@ -4,6 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.marsphotos.network.MarsApi
+import kotlinx.coroutines.launch
 
 /**
  * MarsViewModel, Mars API'yi çağıran ve sonuçları saklayan ViewModel'dir.
@@ -24,7 +27,14 @@ class MarsViewModel : ViewModel() {
      * Mars API Retrofit servisinden Mars fotoğrafları bilgisini alır ve
      * [MarsPhoto] [List] [MutableList]'i günceller.
      */
-    fun getMarsPhotos() {
-        marsUiState = "Mars API durum yanıtını buraya ayarla!"
+    private fun getMarsPhotos() {
+        // Mars API'yi çağır ve sonucu sakla (marsUiState).
+        viewModelScope.launch {
+            // Mars API'yi çağır ve sonucu sakla (marsUiState).
+            val listResult = MarsApi.retrofitService.getPhotos()
+            marsUiState = listResult
+        }
     }
+
+
 }
