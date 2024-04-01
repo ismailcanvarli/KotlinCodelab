@@ -7,13 +7,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marsphotos.network.MarsApi
 import kotlinx.coroutines.launch
+import java.io.IOException
+
+// Mars API'den alınan fotoğrafların sayısını gösterir.
+sealed interface MarsUiState {
+    data class Success(val photos: String) : MarsUiState
+    object Error : MarsUiState
+    object Loading : MarsUiState
+}
 
 /**
  * MarsViewModel, Mars API'yi çağıran ve sonuçları saklayan ViewModel'dir.
  */
 class MarsViewModel : ViewModel() {
     /** En son isteğin durumunu saklayan Composable state */
-    var marsUiState: String by mutableStateOf("")
+    var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)
         private set
 
     /**
@@ -30,9 +38,17 @@ class MarsViewModel : ViewModel() {
     private fun getMarsPhotos() {
         // Mars API'yi çağır ve sonucu sakla (marsUiState).
         viewModelScope.launch {
+            marsUiState = MarsUiState.Loading
             // Mars API'yi çağır ve sonucu sakla (marsUiState).
-            val listResult = MarsApi.retrofitService.getPhotos()
-            marsUiState = listResult
+            marsUiState = try {
+                // Mars API'den fotoğrafları al. Bu istek GET isteğidir.
+                val listResult = MarsApi.retrofitService.getPhotos()
+                // İsteği başarılı bir şekilde aldıysak, sonucu göster.
+                MarsUiState.Success(listResult)
+            // İsteği alırken bir hata oluşursa, hata durumunu göster.
+            } catch (e: IOException) {
+                MarsUiState.Error
+            }
         }
     }
 
