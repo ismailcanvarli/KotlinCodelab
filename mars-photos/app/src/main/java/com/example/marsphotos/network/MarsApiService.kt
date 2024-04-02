@@ -1,29 +1,30 @@
 package com.example.marsphotos.network
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 
 // Mars API'nin base URL'si
 private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com"
 
-// Retrofit servisini oluştur. Bu servis Mars API'ye bağlanır.
+// Retrofit nesnesi oluştur. Bu nesne, Mars API'ye bağlanır.
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(ScalarsConverterFactory.create())
-    .baseUrl(BASE_URL)
-    .build()
+    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+    .baseUrl(BASE_URL).build()
 
 // Mars API servisi için GET isteği yapar. Bu istek Mars API'den fotoğrafları alır.
 interface MarsApiService {
-    // Mars API'den fotoğrafları alır. Bu istek GET isteğidir.
+    // GET isteği yapar ve Mars fotoğraflarını alır.
     @GET("photos")
-    suspend fun getPhotos(): String
+    suspend fun getPhotos(): List<MarsPhoto>
 
 }
 
 // Mars API servisini oluştur. Bu servis Mars API'ye bağlanır.
 object MarsApi {
-    val retrofitService : MarsApiService by lazy {
+    val retrofitService: MarsApiService by lazy {
         retrofit.create(MarsApiService::class.java)
     }
 }

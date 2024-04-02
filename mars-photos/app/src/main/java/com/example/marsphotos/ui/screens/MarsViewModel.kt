@@ -44,7 +44,9 @@ class MarsViewModel : ViewModel() {
                 // Mars API'den fotoğrafları al. Bu istek GET isteğidir.
                 val listResult = MarsApi.retrofitService.getPhotos()
                 // İsteği başarılı bir şekilde aldıysak, sonucu göster.
-                MarsUiState.Success(listResult)
+                MarsUiState.Success(
+                    "Success: ${listResult.size} Mars photos retrieved"
+                )
             // İsteği alırken bir hata oluşursa, hata durumunu göster.
             } catch (e: IOException) {
                 MarsUiState.Error
