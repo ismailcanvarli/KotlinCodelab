@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.marsphotos.model.MarsPhoto
 import com.example.marsphotos.network.MarsApi
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.io.IOException
 
 // Mars API'den alınan fotoğrafların sayısını gösterir.
@@ -49,6 +51,8 @@ class MarsViewModel : ViewModel() {
                 )
             // İsteği alırken bir hata oluşursa, hata durumunu göster.
             } catch (e: IOException) {
+                MarsUiState.Error
+            } catch (e: HttpException) {
                 MarsUiState.Error
             }
         }

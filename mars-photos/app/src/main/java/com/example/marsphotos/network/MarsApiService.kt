@@ -1,5 +1,6 @@
 package com.example.marsphotos.network
 
+import com.example.marsphotos.model.MarsPhoto
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -12,7 +13,8 @@ private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com
 // Retrofit nesnesi oluştur. Bu nesne, Mars API'ye bağlanır.
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-    .baseUrl(BASE_URL).build()
+    .baseUrl(BASE_URL)
+    .build()
 
 // Mars API servisi için GET isteği yapar. Bu istek Mars API'den fotoğrafları alır.
 interface MarsApiService {

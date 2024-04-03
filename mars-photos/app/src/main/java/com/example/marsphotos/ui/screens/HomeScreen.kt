@@ -31,17 +31,10 @@ fun HomeScreen(
 ) {
     // Mars API'den alınan fotoğrafların sayısına göre ekranda gösterilecek widget'ı seç.
     when (marsUiState) {
-        is MarsUiState.Loading -> {
-            LoadingScreen(modifier = modifier.fillMaxSize())
-        }
-        is MarsUiState.Success -> {
-            ResultScreen(
-                marsUiState.photos, modifier = modifier.fillMaxWidth()
-            )
-        }
-        is MarsUiState.Error -> {
-            ErrorScreen( modifier = modifier.fillMaxSize())
-        }
+        is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is MarsUiState.Success -> ResultScreen(marsUiState.photos, modifier = modifier.fillMaxWidth())
+
+        is MarsUiState.Error -> ErrorScreen( modifier = modifier.fillMaxSize())
     }
 }
 
@@ -108,5 +101,13 @@ fun LoadingScreenPreview() {
 fun ErrorScreenPreview() {
     MarsPhotosTheme {
         ErrorScreen()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PhotosGridScreenPreview() {
+    MarsPhotosTheme {
+        ResultScreen(stringResource(R.string.placeholder_success))
     }
 }
