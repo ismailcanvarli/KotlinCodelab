@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.marsphotos.data.NetworkMarsPhotosRepository
 import com.example.marsphotos.model.MarsPhoto
-import com.example.marsphotos.network.MarsApi
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -43,8 +43,9 @@ class MarsViewModel : ViewModel() {
             marsUiState = MarsUiState.Loading
             // Mars API'yi çağır ve sonucu sakla (marsUiState).
             marsUiState = try {
-                // Mars API'den fotoğrafları al. Bu istek GET isteğidir.
-                val listResult = MarsApi.retrofitService.getPhotos()
+                // Mars API'den Mars fotoğraflarını al.
+                val marsPhotosRepository = NetworkMarsPhotosRepository()
+                val listResult = marsPhotosRepository.getMarsPhotos()
                 // İsteği başarılı bir şekilde aldıysak, sonucu göster.
                 MarsUiState.Success(
                     "Success: ${listResult.size} Mars photos retrieved"
