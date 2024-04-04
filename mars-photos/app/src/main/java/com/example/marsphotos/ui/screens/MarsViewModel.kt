@@ -18,7 +18,7 @@ import java.io.IOException
 
 // Mars API'den alınan fotoğrafların sayısını gösterir.
 sealed interface MarsUiState {
-    data class Success(val photos: String) : MarsUiState
+    data class Success(val photos: MarsPhoto) : MarsUiState
     object Error : MarsUiState
     object Loading : MarsUiState
 }
@@ -48,11 +48,9 @@ class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : Vi
             marsUiState = MarsUiState.Loading
             // Mars API'yi çağır ve sonucu sakla (marsUiState).
             marsUiState = try {
-                val listResult = marsPhotosRepository.getMarsPhotos()
-                // İsteği başarılı bir şekilde aldıysak, sonucu göster.
-                MarsUiState.Success(
-                    "Success: ${listResult.size} Mars photos retrieved"
-                )
+                val result = marsPhotosRepository.getMarsPhotos()[0]
+                // Mars fotoğraflarını başarıyla alırsa, başarılı durumu göster.
+                MarsUiState.Success(marsPhotosRepository.getMarsPhotos()[0])
             // İsteği alırken bir hata oluşursa, hata durumunu göster.
             } catch (e: IOException) {
                 MarsUiState.Error

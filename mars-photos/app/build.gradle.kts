@@ -71,6 +71,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
+    // Coil kütüphanesini ekleme (Coil library)
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     debugImplementation("androidx.compose.ui:ui-tooling")
     // JUnit 4 kütüphanesini ekledik local unit testler için.
