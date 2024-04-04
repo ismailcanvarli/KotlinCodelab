@@ -1,6 +1,8 @@
-package com.example.marsphotos.fake
+package com.example.marsphotos
 
 import com.example.marsphotos.data.NetworkMarsPhotosRepository
+import com.example.marsphotos.fake.FakeDataSource
+import com.example.marsphotos.fake.FakeMarsApiService
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
