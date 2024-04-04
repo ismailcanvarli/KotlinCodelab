@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -37,14 +38,17 @@ import com.example.marsphotos.ui.theme.MarsPhotosTheme
 @Composable
 fun HomeScreen(
     marsUiState: MarsUiState,
+    retryAction: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     // Mars API'den alınan fotoğrafların sayısına göre ekranda gösterilecek widget'ı seç.
     when (marsUiState) {
         is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is MarsUiState.Success -> PhotosGridScreen(marsUiState.photos, modifier)
-        else -> ErrorScreen(modifier = modifier.fillMaxSize())
+        is MarsUiState.Success -> PhotosGridScreen(
+            marsUiState.photos, contentPadding = contentPadding, modifier = modifier.fillMaxWidth()
+        )
+        is MarsUiState.Error -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
     }
 }
 
@@ -64,7 +68,9 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
  * ErrorScreen, hata durumunu gösterir.
  */
 @Composable
-fun ErrorScreen(modifier: Modifier = Modifier) {
+fun ErrorScreen(
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -74,6 +80,9 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
             painter = painterResource(id = R.drawable.ic_connection_error), contentDescription = ""
         )
         Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
+        Button(onClick = retryAction) {
+            Text(text = stringResource(R.string.retry))
+        }
     }
 }
 
@@ -92,7 +101,6 @@ fun ResultScreen(photos: String, modifier: Modifier = Modifier) {
 // Mars fotoğraflarını göstermek için bir AsyncImage Composable.
 @Composable
 fun MarsPhotoCard(photo: MarsPhoto, modifier: Modifier = Modifier) {
-
     Card(
         modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -104,7 +112,8 @@ fun MarsPhotoCard(photo: MarsPhoto, modifier: Modifier = Modifier) {
             // Yüklenirken gösterilecek resim.
             placeholder = painterResource(R.drawable.loading_img),
             contentDescription = stringResource(R.string.mars_photo),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 
@@ -113,11 +122,15 @@ fun MarsPhotoCard(photo: MarsPhoto, modifier: Modifier = Modifier) {
 // Fotoğrafları göstermek için bir PhotosGridScreen Composable.
 @Composable
 fun PhotosGridScreen(
-    photos: List<MarsPhoto>, modifier: Modifier = Modifier
+    photos: List<MarsPhoto>,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     LazyVerticalGrid(
         // Fotoğrafların sayısına göre sütun sayısını ayarlar.
-        columns = GridCells.Adaptive(150.dp), modifier = modifier.padding(horizontal = 4.dp)
+        columns = GridCells.Adaptive(150.dp),
+        modifier = modifier.padding(horizontal = 4.dp),
+        contentPadding = contentPadding,
     ) {
         items(items = photos, key = { photo -> photo.id }) { photo ->
             MarsPhotoCard(
@@ -151,7 +164,7 @@ fun LoadingScreenPreview() {
 @Composable
 fun ErrorScreenPreview() {
     MarsPhotosTheme {
-        ErrorScreen()
+        ErrorScreen({})
     }
 }
 
