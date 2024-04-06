@@ -9,25 +9,30 @@ import com.example.bluromatic.KEY_IMAGE_URI
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+/**
+ * BluromaticRepository, resme bulanık uygulamak için kullanılacak olan depo tarafından
+ * uygulanacak yöntemleri tanımlayan bir sınıftır.
+ */
+
 class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
 
     override val outputWorkInfo: Flow<WorkInfo?> = MutableStateFlow(null)
 
     /**
-     * Create the WorkRequests to apply the blur and save the resulting image
-     * @param blurLevel The amount to blur the image
+     * Uygulamak için WorkRequest oluşturur ve başlatır
+     * @param blurLevel Resmi bulanıklaştırmak için miktar
      */
     override fun applyBlur(blurLevel: Int) {}
 
     /**
-     * Cancel any ongoing WorkRequests
+     * İşlemekte olan WorkRequests'leri iptal eder
      * */
     override fun cancelWork() {}
 
     /**
-     * Creates the input data bundle which includes the blur level to
-     * update the amount of blur to be applied and the Uri to operate on
-     * @return Data which contains the Image Uri as a String and blur level as an Integer
+     * Uygulanacak bulanıklık miktarını güncellemek için bulanıklık seviyesini ve
+     * işlem yapılacak Uri'yi içeren giriş veri demetini oluşturur
+     * @return Resim Uri'sini String ve bulanıklık seviyesini Integer olarak içeren Data
      */
     private fun createInputDataForWorkRequest(blurLevel: Int, imageUri: Uri): Data {
         val builder = Data.Builder()

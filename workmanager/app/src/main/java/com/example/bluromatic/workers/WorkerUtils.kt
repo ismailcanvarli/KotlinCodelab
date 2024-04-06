@@ -26,34 +26,34 @@ import java.util.UUID
 private const val TAG = "WorkerUtils"
 
 /**
- * Create a Notification that is shown as a heads-up notification if possible.
+ * Eğer mümkünse, bir heads-up bildirimi olarak gösterilen bir Bildirim oluşturun.
  *
- * For this codelab, this is used to show a notification so that you know when different steps
- * of the background work chain are starting
+ * Bu codelab için, bu, farklı adımların ne zaman başladığını bildiğinizden
+ * emin olmak için bir bildirim göstermek için kullanılır.
  *
- * @param message Message shown on the notification
- * @param context Context needed to create Toast
+ * @param message Mesaj bildirimde gösterilir
+ * @param context Toast oluşturmak için gerekli olan Context
  */
 fun makeStatusNotification(message: String, context: Context) {
 
-    // Make a channel if necessary
+    // Eğer gerekiyorsa bir kanal oluştur
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
+        // Apı 26 ve üzeri için NotificationChannel oluştur
+        // Çünkü NotificationChannel sınıfı yeni ve destek kütüphanede yok
         val name = VERBOSE_NOTIFICATION_CHANNEL_NAME
         val description = VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(CHANNEL_ID, name, importance)
         channel.description = description
 
-        // Add the channel
+        // kanalı ekle
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
 
         notificationManager?.createNotificationChannel(channel)
     }
 
-    // Create the notification
+    // Bildirim oluştur
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_launcher_foreground)
         .setContentTitle(NOTIFICATION_TITLE)
@@ -61,15 +61,15 @@ fun makeStatusNotification(message: String, context: Context) {
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setVibrate(LongArray(0))
 
-    // Show the notification
+    // Bildirimi göster
     NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
 }
 
 /**
- * Blurs the given Bitmap image
- * @param bitmap Image to blur
- * @param blurLevel Blur level input
- * @return Blurred bitmap image
+ * Verilen Bitmap görüntüsünü bulanıklaştırır
+ * @param bitmap Bulanıklaştırılacak görüntü
+ * @param blurLevel Bulanıklık seviyesi girişi
+ * @return Bulanıklaştırılmış bitmap görüntüsü
  */
 @WorkerThread
 fun blurBitmap(bitmap: Bitmap, blurLevel: Int): Bitmap {
@@ -83,11 +83,11 @@ fun blurBitmap(bitmap: Bitmap, blurLevel: Int): Bitmap {
 }
 
 /**
- * Writes bitmap to a temporary file and returns the Uri for the file
- * @param applicationContext Application context
- * @param bitmap Bitmap to write to temp file
- * @return Uri for temp file with bitmap
- * @throws FileNotFoundException Throws if bitmap file cannot be found
+ * Bitmap'i geçici bir dosyaya yazar ve dosya için Uri'yi döndürür
+ * @param applicationContext Uygulama bağlamı
+ * @param bitmap Geçici dosyaya yazılacak Bitmap
+ * @return Bitmap ile geçici dosya için Uri
+ * @throws FileNotFoundException Bitmap dosyası bulunamazsa fırlatır
  */
 @Throws(FileNotFoundException::class)
 fun writeBitmapToFile(applicationContext: Context, bitmap: Bitmap): Uri {

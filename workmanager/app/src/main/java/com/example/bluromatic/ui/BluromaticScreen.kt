@@ -50,6 +50,8 @@ import com.example.bluromatic.R
 import com.example.bluromatic.data.BlurAmount
 import com.example.bluromatic.ui.theme.BluromaticTheme
 
+// Kullanıcı arayüzü için şekillendirilebilir işlevler içerir ve BlurViewModel ile etkileşime girer.
+
 @Composable
 fun BluromaticScreen(blurViewModel: BlurViewModel = viewModel(factory = BlurViewModel.Factory)) {
     val uiState by blurViewModel.blurUiState.collectAsStateWithLifecycle()
