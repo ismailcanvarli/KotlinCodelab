@@ -2,10 +2,14 @@ package com.example.bluromatic.workers
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.example.bluromatic.DELAY_TIME_MILLIS
+import com.example.bluromatic.KEY_BLUR_LEVEL
+import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,32 +26,44 @@ private const val TAG = "BlurWorker"
 class BlurWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
 
     override suspend fun doWork(): Result {
-        makeStatusNotification(
-            applicationContext.resources.getString(R.string.blurring_image),
-            applicationContext
-        )
+
+        val resourceUri = inputData.getString(KEY_IMAGE_URI)
+        val blurLevel = inputData.getInt(KEY_BLUR_LEVEL, 1)
+
         return withContext(Dispatchers.IO) {
             // resmi bulanıklaştırıken bir gecikme ekledik.
             delay(DELAY_TIME_MILLIS)
             // Resmi bulanıklaştırma işlemini gerçekleştir
             // @withContext işlevi, işlemi belirtilen bir Dispatcher'da çalıştırır
             return@withContext try {
-                val picture = BitmapFactory.decodeResource(
-                    applicationContext.resources,
-                    R.drawable.android_cupcake
+
+                // İçerik çözücüyü al
+                val resolver = applicationContext.contentResolver
+                val picture = BitmapFactory.decodeStream(
+                    resolver.openInputStream(Uri.parse(resourceUri))
                 )
                 // Resmi bulanıklaştır
-                val output = blurBitmap(picture, 1)
+                val output = blurBitmap(picture, blurLevel)
 
                 // Bulanıklaştırılmış resmi dosyaya yaz
                 val outputUri = writeBitmapToFile(applicationContext, output)
 
                 makeStatusNotification(
-                    "Output is $outputUri",
-                    applicationContext
+                    "Output is $outputUri", applicationContext
                 )
 
-                Result.success()
+                // Giriş verilerini kontrol et ve hata durumunda bir hata döndür
+                require(!resourceUri.isNullOrBlank()) {
+                    val errorMessage =
+                        applicationContext.resources.getString(R.string.invalid_input_uri)
+                    Log.e(TAG, errorMessage)
+                    errorMessage
+                }
+                // Çıktı verilerini ayarla ve işlemi başarılı olarak işaretle
+                val outputData = workDataOf(KEY_IMAGE_URI to outputUri.toString())
+
+                // Çıktı verilerini döndür
+                Result.success(outputData)
             } catch (throwable: Throwable) {
                 // Hata durumunda log kaydı oluştur.
                 Log.e(
@@ -59,7 +75,6 @@ class BlurWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, 
             }
 
         }
-
 
 
     }
