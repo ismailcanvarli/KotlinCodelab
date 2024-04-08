@@ -3,9 +3,12 @@ package com.example.bluromatic.data
 import android.content.Context
 import android.net.Uri
 import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.example.bluromatic.KEY_BLUR_LEVEL
 import com.example.bluromatic.KEY_IMAGE_URI
+import com.example.bluromatic.workers.BlurWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -16,13 +19,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
 
+    private val workManager = WorkManager.getInstance(context)
+
     override val outputWorkInfo: Flow<WorkInfo?> = MutableStateFlow(null)
 
     /**
      * Uygulamak için WorkRequest oluşturur ve başlatır
      * @param blurLevel Resmi bulanıklaştırmak için miktar
      */
-    override fun applyBlur(blurLevel: Int) {}
+    override fun applyBlur(blurLevel: Int) {
+        val blurBuilder = OneTimeWorkRequestBuilder<BlurWorker>()
+
+        // Giriş verilerini oluştur
+        workManager.enqueue(blurBuilder.build())
+    }
 
     /**
      * İşlemekte olan WorkRequests'leri iptal eder
